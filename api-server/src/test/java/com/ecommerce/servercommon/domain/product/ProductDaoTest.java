@@ -1,4 +1,4 @@
-package com.ecommerce.common.domain.product;
+package com.ecommerce.servercommon.domain.product;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

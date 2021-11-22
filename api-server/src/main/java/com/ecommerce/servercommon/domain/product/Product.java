@@ -1,4 +1,4 @@
-package com.ecommerce.common.domain.product;
+package com.ecommerce.servercommon.domain.product;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

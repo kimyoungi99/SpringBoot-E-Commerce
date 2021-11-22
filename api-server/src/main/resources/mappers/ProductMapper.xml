@@ -5,7 +5,7 @@
         PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.ecommerce.common.domain.product.ProductDao">
+<mapper namespace="com.ecommerce.servercommon.domain.product.ProductDao">
     <!-- product 삽입 -->
     <insert id="add" useGeneratedKeys="true" keyProperty="id" parameterType="Product">
         INSERT INTO product (_id, name, price)
@@ -29,6 +29,11 @@
         UPDATE product
         SET name = #{name}, price = #{price}
         WHERE _id = #{id}
+    </select>
+
+    <!--모든 product find -->
+    <select id="findAll" resultMap="selectProductMap">
+        SELECT * FROM product
     </select>
 
     <!-- resultMap -->
