@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- DTD 선언 -->
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ecommerce.common.domain.product.ProductDao">
+    <!-- product 삽입 -->
+    <insert id="add" useGeneratedKeys="true" keyProperty="id" parameterType="Product">
+        INSERT INTO product (_id, name, price)
+        VALUES(#{id}, #{name}, #{price})
+    </insert>
+
+    <!--id로 조회 -->
+    <select id="findById" resultMap="selectProductMap" parameterType="Long">
+        SELECT * FROM product
+        WHERE _id = #{id}
+    </select>
+
+    <!--id로 삭제 -->
+    <select id="deleteById" parameterType="Long">
+        DELETE FROM product
+        WHERE _id = #{id}
+    </select>
+
+    <!--product 수정 -->
+    <select id="update" parameterType="Product">
+        UPDATE product
+        SET name = #{name}, price = #{price}
+        WHERE _id = #{id}
+    </select>
+
+    <!-- resultMap -->
+    <resultMap id="selectProductMap" type="Product">
+        <result column="_id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="name" property="name"/>
+    </resultMap>
+</mapper>
