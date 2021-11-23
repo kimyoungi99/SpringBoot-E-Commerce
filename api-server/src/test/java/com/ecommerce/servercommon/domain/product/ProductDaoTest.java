@@ -19,8 +19,8 @@ public class ProductDaoTest {
 
     @BeforeEach
     public void setUp() {
-        this.product1 = new Product(null, "키보드", 10000L);
-        this.product2 = new Product(null, "마우스", 20000L);
+        this.product1 = new Product(null, "keyboard", 10000L);
+        this.product2 = new Product(null, "mouse", 20000L);
     }
 
     @AfterEach
@@ -52,7 +52,7 @@ public class ProductDaoTest {
     public void update() {
         productDao.add(this.product1);
 
-        this.product1 = new Product(this.product1.getId(), "비싼 키보드", 1000000L);
+        this.product1 = new Product(this.product1.getId(), "expensive keyboard", 1000000L);
         productDao.update(this.product1);
 
         checkSameProduct(productDao.findById(product1.getId()), this.product1);
