@@ -8,11 +8,11 @@ import java.util.List;
 public interface OrderDao {
     void add(Order order);
 
-    Order findById(Long id);
+    List<Order> findAll();
 
-    void deleteById(Long id);
+    Order findById(Long id);
 
     void update(Order order);
 
-    List<Order> findAll();
+    void deleteById(Long id);
 }

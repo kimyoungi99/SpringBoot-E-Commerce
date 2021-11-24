@@ -24,17 +24,21 @@
         WHERE _id = #{id}
     </select>
 
-<!--    &lt;!&ndash;product 수정 &ndash;&gt;-->
-<!--    <select id="update" parameterType="Product">-->
-<!--        UPDATE product-->
-<!--        SET name = #{name}, price = #{price}-->
-<!--        WHERE _id = #{id}-->
-<!--    </select>-->
+    <!--product 수정 -->
+    <select id="update" parameterType="Product">
+        UPDATE product_order
+        SET product_id = #{productId},
+            order_time = #{orderTime},
+            address = #{address},
+            quantity = #{quantity},
+            order_status = #{orderStatus.value}
+        WHERE _id = #{id}
+    </select>
 
-<!--    &lt;!&ndash;모든 product find &ndash;&gt;-->
-<!--    <select id="findAll" resultMap="selectOrderMap">-->
-<!--        SELECT * FROM product_order-->
-<!--    </select>-->
+    <!--모든 product find -->
+    <select id="findAll" resultMap="selectOrderMap">
+        SELECT * FROM product_order
+    </select>
 
     <!-- resultMap -->
     <resultMap id="selectOrderMap" type="Order">

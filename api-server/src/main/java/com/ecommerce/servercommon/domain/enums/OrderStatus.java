@@ -3,7 +3,7 @@ package com.ecommerce.servercommon.domain.enums;
 import lombok.Getter;
 
 public enum OrderStatus {
-    PAYED(1), CANCLED(2), REFUNDED(3), SHIPPING(4), COMPLETE(5);
+    PAYED(1), CANECLED(2), REFUNDED(3), SHIPPING(4), COMPLETE(5);
 
     @Getter
     private final int value;
@@ -17,7 +17,7 @@ public enum OrderStatus {
             case 1:
                 return OrderStatus.PAYED;
             case 2:
-                return OrderStatus.CANCLED;
+                return OrderStatus.CANECLED;
             case 3:
                 return OrderStatus.REFUNDED;
             case 4:

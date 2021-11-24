@@ -51,7 +51,18 @@ public class OrderDaoTest {
         this.order1 = new Order(null, this.product1.getId(), LocalDateTime.now(), "Seoul",3, OrderStatus.PAYED);
         this.orderDao.add(this.order1);
 
-        checkSameOrder(this.order1, orderDao.findById(this.order1.getId()));
+        checkSameOrder(this.order1, this.orderDao.findById(this.order1.getId()));
+    }
+
+    @Test
+    public void update() {
+        this.order1 = new Order(null, this.product1.getId(), LocalDateTime.now(), "Seoul",3, OrderStatus.PAYED);
+        this.orderDao.add(this.order1);
+        this.order1.setOrderStatus(OrderStatus.CANECLED);
+        this.order1.setAddress("asdf");
+        this.orderDao.update(this.order1);
+
+        checkSameOrder(this.order1, this.orderDao.findById(this.order1.getId()));
     }
 
     private void checkSameOrder(Order order1, Order order2) {
