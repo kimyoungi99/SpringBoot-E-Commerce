@@ -1,4 +1,4 @@
-package com.ecommerce.common.config;
+package com.ecommerce.config;
 
 import com.ecommerce.servercommon.dto.OrderDto;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
