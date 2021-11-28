@@ -19,7 +19,6 @@ public class UserService {
     public void join(UserJoinDto userJoinDto) {
         User user = userJoinDto.toEntity();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        System.out.println(user.getPassword());
         userDao.add(user);
     }
 }
