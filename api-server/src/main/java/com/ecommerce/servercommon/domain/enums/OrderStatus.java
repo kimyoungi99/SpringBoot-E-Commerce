@@ -1,11 +1,12 @@
 package com.ecommerce.servercommon.domain.enums;
 
 import lombok.Getter;
+import lombok.Setter;
 
+@Getter
 public enum OrderStatus {
     PAYED(1), CANECLED(2), REFUNDED(3), SHIPPING(4), COMPLETE(5);
 
-    @Getter
     private final int value;
 
     OrderStatus(int value) {

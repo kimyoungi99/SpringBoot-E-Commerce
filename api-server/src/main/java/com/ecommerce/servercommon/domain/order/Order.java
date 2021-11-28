@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 public class Order {
     private Long id;
     private Long productId;
+    private Long buyerId;
     private LocalDateTime orderTime;
     private String address;
     private Integer quantity;
