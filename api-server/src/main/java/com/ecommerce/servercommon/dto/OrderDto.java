@@ -1,5 +1,6 @@
 package com.ecommerce.servercommon.dto;
 
+import com.ecommerce.servercommon.domain.enums.OrderStatus;
 import com.ecommerce.servercommon.domain.order.Order;
 import lombok.Data;
 
@@ -15,6 +16,13 @@ public class OrderDto implements Serializable {
     private Integer quantity;
 
     public Order toEntity() {
-        return new Order(null, this.productId, this.buyerId, this.orderTime, this.address, this.quantity, null);
+        return Order.builder()
+                .productId(this.productId)
+                .buyerId(this.buyerId)
+                .orderStatus(OrderStatus.PAYED)
+                .orderTime(this.orderTime)
+                .address(this.address)
+                .quantity(this.quantity)
+                .build();
     }
 }
