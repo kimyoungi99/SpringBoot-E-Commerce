@@ -9,6 +9,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Product {
     private Long id;
+    private Long sellerId;
     private String name;
     private Long price;
 }
