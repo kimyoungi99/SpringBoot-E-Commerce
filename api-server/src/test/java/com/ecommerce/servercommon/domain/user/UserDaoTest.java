@@ -26,9 +26,9 @@ public class UserDaoTest {
 
     @BeforeEach
     public void before() {
-        this.user1 = new User(null, "kim", "young ki", "kimyoungi99@naver.com", "asdf", Role.USER, "asdf", 10000L);
-        this.user2 = new User(null, "kim", "asdf", "yk0318ha@gmail.com", "asdf", Role.USER, "asdf", 20000L);
-        this.user1Duplicate = new User(null, "kim", "young ki", "kimyoungi99@naver.com", "asdf", Role.USER, "asdf", 10000L);
+        this.user1 = new User(null, "kim", "young ki", "akimyoungi99@naver.com", "asdf", Role.USER, "asdf", 10000L);
+        this.user2 = new User(null, "kim", "asdf", "ayk0318ha@gmail.com", "asdf", Role.USER, "asdf", 20000L);
+        this.user1Duplicate = new User(null, "kim", "young ki", "akimyoungi99@naver.com", "asdf", Role.USER, "asdf", 10000L);
     }
 
     @AfterEach
@@ -45,6 +45,15 @@ public class UserDaoTest {
 
         checkSameUser(this.user1, this.userDao.findById(this.user1.getId()));
         checkSameUser(this.user2, this.userDao.findById(this.user2.getId()));
+    }
+
+    @Test
+    public void addAndFindByEmail() {
+        this.userDao.add(this.user1);
+        this.userDao.add(this.user2);
+
+        checkSameUser(this.user1, this.userDao.findByEmail(this.user1.getEmail()));
+        checkSameUser(this.user2, this.userDao.findByEmail(this.user2.getEmail()));
     }
 
     @Test

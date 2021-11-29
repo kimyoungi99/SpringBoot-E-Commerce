@@ -25,7 +25,7 @@
     </select>
 
     <!-- email로 조회 -->
-    <select id="findByEmail" resultMap="selectUserMap" parameterType="Long">
+    <select id="findByEmail" resultMap="selectUserMap" parameterType="String">
         SELECT * FROM user
         WHERE email = #{email}
     </select>
