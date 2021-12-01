@@ -23,9 +23,9 @@ public class OrderService {
     private String orderTopicName;
 
     public void sendOrderMessage(OrderDto orderDto, String userEmail) {
-        log.info("주문 메세지 전송"); // 로그에 UID 추가
         orderDto.setOrderTime(LocalDateTime.now());
         orderDto.setBuyerId(userDao.findByEmail(userEmail).getId());
+        log.info("주문 메세지 전송 (UID:" + orderDto.getBuyerId() + ")");
         this.kafkaTemplate.send(this.orderTopicName, orderDto);
     }
 }

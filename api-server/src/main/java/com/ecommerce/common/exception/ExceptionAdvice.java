@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import javax.naming.AuthenticationException;
 import java.nio.charset.Charset;
 
 @ControllerAdvice
@@ -31,6 +32,15 @@ public class ExceptionAdvice {
         httpResponseDto.setStatus(HttpStatus.BAD_REQUEST);
 
         return new ResponseEntity<>(httpResponseDto, getHttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<HttpResponseDto> handler(AuthenticationException e) {
+        HttpResponseDto httpResponseDto = new HttpResponseDto();
+        httpResponseDto.setMessage(e.getMessage());
+        httpResponseDto.setStatus(HttpStatus.UNAUTHORIZED);
+
+        return new ResponseEntity<>(httpResponseDto, getHttpHeaders(), HttpStatus.UNAUTHORIZED);
     }
 
     public HttpHeaders getHttpHeaders() {
