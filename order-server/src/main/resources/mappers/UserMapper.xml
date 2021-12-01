@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- DTD 선언 -->
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ecommerce.servercommon.domain.user.UserDao">
+    <!-- user 삽입 -->
+    <insert id="add" useGeneratedKeys="true" keyProperty="id" parameterType="User">
+        INSERT INTO user (_id, first_name, last_name, email, password, role, address, point)
+        VALUES(#{id}, #{firstName}, #{lastName}, #{email}, #{password}, #{role}, #{address}, #{point})
+    </insert>
+
+    <!-- id로 조회 -->
+    <select id="findById" resultMap="selectUserMap" parameterType="Long">
+        SELECT * FROM user
+        WHERE _id = #{id}
+    </select>
+
+    <!-- id로 삭제 -->
+    <select id="deleteById" parameterType="Long">
+        DELETE FROM user
+        WHERE _id = #{id}
+    </select>
+
+    <!-- email로 조회 -->
+    <select id="findByEmail" resultMap="selectUserMap" parameterType="String">
+        SELECT * FROM user
+        WHERE email = #{email}
+    </select>
+
+<!--    &lt;!&ndash;product 수정 &ndash;&gt;-->
+<!--    <select id="update" parameterType="Product">-->
+<!--        UPDATE product_order-->
+<!--        SET product_id = #{productId},-->
+<!--            order_time = #{orderTime},-->
+<!--            address = #{address},-->
+<!--            quantity = #{quantity},-->
+<!--            order_status = #{orderStatus.value}-->
+<!--        WHERE _id = #{id}-->
+<!--    </select>-->
+
+<!--    &lt;!&ndash;모든 product find &ndash;&gt;-->
+<!--    <select id="findAll" resultMap="selectOrderMap">-->
+<!--        SELECT * FROM product_order-->
+<!--    </select>-->
+
+    <!-- resultMap -->
+    <resultMap id="selectUserMap" type="User">
+        <result column="_id" property="id"/>
+        <result column="first_name" property="firstName"/>
+        <result column="last_name" property="lastName"/>
+        <result column="email" property="email"/>
+        <result column="password" property="password"/>
+        <result column="role" property="role"/>
+        <result column="address" property="address"/>
+        <result column="point" property="point"/>
+    </resultMap>
+</mapper>

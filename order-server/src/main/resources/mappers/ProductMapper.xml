@@ -8,8 +8,8 @@
 <mapper namespace="com.ecommerce.servercommon.domain.product.ProductDao">
     <!-- product 삽입 -->
     <insert id="add" useGeneratedKeys="true" keyProperty="id" parameterType="Product">
-        INSERT INTO product (_id, name, price)
-        VALUES(#{id}, #{name}, #{price})
+        INSERT INTO product (_id, seller_id, name, price)
+        VALUES(#{id}, #{sellerId}, #{name}, #{price})
     </insert>
 
     <!--id로 조회 -->
@@ -27,7 +27,9 @@
     <!--product 수정 -->
     <select id="update" parameterType="Product">
         UPDATE product
-        SET name = #{name}, price = #{price}
+        SET name = #{name},
+            seller_id = #{sellerId},
+            price = #{price}
         WHERE _id = #{id}
     </select>
 
@@ -39,7 +41,7 @@
     <!-- resultMap -->
     <resultMap id="selectProductMap" type="Product">
         <result column="_id" property="id"/>
-        <result column="name" property="name"/>
+        <result column="seller_id" property="sellerId"/>
         <result column="name" property="name"/>
     </resultMap>
 </mapper>

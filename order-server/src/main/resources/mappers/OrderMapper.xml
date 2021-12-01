@@ -8,8 +8,8 @@
 <mapper namespace="com.ecommerce.servercommon.domain.order.OrderDao">
     <!-- product 삽입 -->
     <insert id="add" useGeneratedKeys="true" keyProperty="id" parameterType="Order">
-        INSERT INTO product_order (_id, product_id, order_time, address, quantity, order_status)
-        VALUES(#{id}, #{productId}, #{orderTime}, #{address}, #{quantity}, #{orderStatus.value})
+        INSERT INTO product_order (_id, product_id, buyer_id, order_time, address, quantity, order_status)
+        VALUES(#{id}, #{productId}, #{buyerId}, #{orderTime}, #{address}, #{quantity}, #{orderStatus.value})
     </insert>
 
     <!--id로 조회 -->
@@ -28,6 +28,7 @@
     <select id="update" parameterType="Product">
         UPDATE product_order
         SET product_id = #{productId},
+            buyer_id = #{buyerId},
             order_time = #{orderTime},
             address = #{address},
             quantity = #{quantity},
@@ -44,6 +45,7 @@
     <resultMap id="selectOrderMap" type="Order">
         <result column="_id" property="id"/>
         <result column="product_id" property="productId"/>
+        <result column="buyer_id" property="buyerId"/>
         <result column="order_time" property="orderTime"/>
         <result column="address" property="address"/>
         <result column="quantity" property="quantity"/>
