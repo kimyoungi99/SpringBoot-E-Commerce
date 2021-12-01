@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 @NoArgsConstructor
 public class HttpResponseDto {
-    private HttpStatus status;
+    private HttpStatus HttpStatus;
     private String message;
     private Object data;
 }

@@ -2,10 +2,12 @@ package com.ecommerce.restcontroller;
 
 import com.ecommerce.common.config.security.AuthenticationValidator;
 import com.ecommerce.common.response.HttpResponseDto;
+import com.ecommerce.common.response.ResponseBuilder;
 import com.ecommerce.servercommon.dto.OrderDto;
 import com.ecommerce.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,9 +23,10 @@ public class OrderController {
 
     private final OrderService orderService;
     private final AuthenticationValidator authenticationValidator;
+    private final ResponseBuilder responseBuilder;
 
     @PostMapping
-    public HttpResponseDto order(
+    public ResponseEntity<HttpResponseDto> order(
             Authentication authentication,
             @RequestBody OrderDto orderDto
     ) throws AuthenticationException {
@@ -33,10 +36,10 @@ public class OrderController {
                 authenticationValidator.validateAndGetName(authentication)
         );
 
-        return new HttpResponseDto(
-                HttpStatus.ACCEPTED,
-                "주문 요청 완료",
-                null
+        return responseBuilder.jsonResponseBuild(
+          HttpStatus.OK,
+          "주문 요청 성공",
+          null
         );
     }
 }
