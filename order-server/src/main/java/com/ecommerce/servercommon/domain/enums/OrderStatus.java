@@ -1,7 +1,6 @@
 package com.ecommerce.servercommon.domain.enums;
 
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 public enum OrderStatus {

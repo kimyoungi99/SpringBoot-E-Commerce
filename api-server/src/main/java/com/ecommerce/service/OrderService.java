@@ -1,5 +1,6 @@
 package com.ecommerce.service;
 
+import com.ecommerce.servercommon.domain.user.UserDao;
 import com.ecommerce.servercommon.dto.OrderDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,14 +15,17 @@ import java.time.LocalDateTime;
 @Service
 @RequiredArgsConstructor
 public class OrderService {
+
     private final KafkaTemplate<String, OrderDto> kafkaTemplate;
+    private final UserDao userDao;
 
     @Value(value = "${order.topic.name}")
     private String orderTopicName;
 
-    public void sendOrderMessage(OrderDto orderDto) {
-        log.info("주문 메세지 전송"); // 로그에 UID 추가
+    public void sendOrderMessage(OrderDto orderDto, String userEmail) {
         orderDto.setOrderTime(LocalDateTime.now());
+        orderDto.setBuyerId(userDao.findByEmail(userEmail).getId());
+        log.info("주문 메세지 전송 (UID:" + orderDto.getBuyerId() + ")");
         this.kafkaTemplate.send(this.orderTopicName, orderDto);
     }
 }
