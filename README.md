@@ -2,10 +2,10 @@
 Spring Boot와 kafka를 활용한 온라인 커머스 서비스 
 
 ## Tech Stack
-Language : JAVA8
-Framework : Spring Boot
-DB : Mysql (MyBatis)
-Message Queue : Kafka
+- Language : JAVA8
+- Framework : Spring Boot
+- DB : Mysql (MyBatis)
+- Message Queue : Kafka
 
 ## Project Goal
 - 로그인, 상품등록, 구매, 리뷰와 같은 일반적인 쇼핑몰 기능의 백엔드 구현
