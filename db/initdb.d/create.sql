@@ -1,8 +1,7 @@
-Drop DATABASE ecommerce;
-CREATE DATABASE ecommerce;
+CREATE DATABASE IF NOT EXISTS ecommerce;
 USE ecommerce;
 
-CREATE TABLE user(
+CREATE TABLE IF NOT EXISTS user(
     _id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(10) NOT NULL,
     last_name VARCHAR(20) NOT NULL,
@@ -13,7 +12,7 @@ CREATE TABLE user(
     point BIGINT NOT NULL
 );
 
-CREATE TABLE product (
+CREATE TABLE IF NOT EXISTS product (
     _id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     seller_id BIGINT NOT NULL,
     name VARCHAR(100) NOT NULL,
@@ -22,7 +21,7 @@ CREATE TABLE product (
     FOREIGN KEY (seller_id) REFERENCES user (_id)
 );
 
-CREATE TABLE product_order (
+CREATE TABLE IF NOT EXISTS product_order (
     _id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     product_id BIGINT NOT NULL,
     buyer_id BIGINT NOT NULL,

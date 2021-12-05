@@ -1,0 +1,52 @@
+version: "3.7"
+
+services:
+
+  mysql:
+    platform: linux/x86_64
+    image: mysql:5.7
+    command: [ 
+      "--character-set-server=utf8",
+      "--collation-server=utf8_general_ci",
+      ]
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ecommerce
+      MYSQL_USER: yk0318ha
+      MYSQL_PASSWORD: yk0318ha
+    restart: always
+    volumes:
+      - ./db/initdb.d:/docker-entrypoint-initdb.d
+    ports:
+      - "3306:3306"
+    container_name: ecommerce-mysql
+
+  # api-server:
+  #   image: gcr.io/yk-ecommerce/api-server
+  #   ports:
+  #     - "8080:8080"
+  #   container_name: api-server
+  #   restart: always
+  #   depends_on:
+  #     - mysql
+  #   environment:
+  #     MYSQL_DATABASE: ecommerce
+  #     MYSQL_ROOT_PASSWORD: root
+  #     MYSQL_USER: root
+  #     MYSQL_PASSWORD: root
+  #     SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/ecommerce?useUnicode=yes&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Seoul
+
+  # order-server:
+  #   image: gcr.io/yk-ecommerce/order-server
+  #   ports:
+  #     - "8000:8000"
+  #   container_name: order-server
+  #   restart: always
+  #   depends_on:
+  #     - mysql
+  #   environment:
+  #     MYSQL_DATABASE: ecommerce
+  #     MYSQL_ROOT_PASSWORD: root
+  #     MYSQL_USER: root
+  #     MYSQL_PASSWORD: root
+  #     SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/ecommerce?useUnicode=yes&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Seoul
