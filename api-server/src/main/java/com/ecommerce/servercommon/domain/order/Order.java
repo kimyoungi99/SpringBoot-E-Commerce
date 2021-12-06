@@ -1,6 +1,7 @@
 package com.ecommerce.servercommon.domain.order;
 
 import com.ecommerce.servercommon.domain.enums.OrderStatus;
+import com.ecommerce.servercommon.dto.OrderResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,4 +19,16 @@ public class Order {
     private String address;
     private Integer quantity;
     private OrderStatus orderStatus;
+
+    public OrderResponseDto toResponseDto() {
+        return OrderResponseDto.builder()
+                .id(id)
+                .productId(this.productId)
+                .buyerId(this.buyerId)
+                .orderTime(this.orderTime)
+                .address(this.address)
+                .quantity(this.quantity)
+                .orderStatus(this.orderStatus)
+                .build();
+    }
 }

@@ -23,6 +23,7 @@ services:
     container_name: ecommerce-mysql
 
   api-server:
+    build: .
     image: gcr.io/yk-ecommerce/api-server
     ports:
       - "8080:8080"
@@ -30,12 +31,15 @@ services:
     restart: always
     depends_on:
       - mysql
+      - kafka
     environment:
-      SPRINGBOOT_DB_USER: root
-      SPRINGBOOT_DB_PASSWORD: root
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/ecommerce?useUnicode=yes&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Seoul
-    
+      KAFKA_BOOTSTRAP: kafka:9092
+    links:
+      - kafka:kafka
+
   order-server:
+    build: .
     image: gcr.io/yk-ecommerce/order-server
     ports:
       - "8000:8000"
@@ -45,9 +49,10 @@ services:
       - mysql
       - kafka
     environment:
-      SPRINGBOOT_DB_USER: root
-      SPRINGBOOT_DB_PASSWORD: root
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/ecommerce?useUnicode=yes&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Seoul
+      KAFKA_BOOTSTRAP: kafka:9092
+    links:
+      - kafka:kafka
   
   zookeeper:
     container_name: ecommerce-zookeeper
@@ -56,6 +61,7 @@ services:
       - "2181:2181"
 
   kafka:
+    build: .
     container_name: ecommerce-kafka
     image: wurstmeister/kafka:latest
     depends_on:
@@ -65,7 +71,7 @@ services:
     environment:
       KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
       KAFKA_ADVERTISED_PORT: 9092
-      KAFKA_CREATE_TOPICS: "order-service:1:1" # Topic명:Partition개수:Replica개수
+      KAFKA_CREATE_TOPICS: "test:1:1" # Topic명:Partition개수:Replica개수
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock

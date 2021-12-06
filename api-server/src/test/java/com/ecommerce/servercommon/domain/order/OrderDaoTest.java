@@ -16,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -36,7 +37,7 @@ public class OrderDaoTest {
 
     @BeforeEach
     public void before() {
-        this.user1 = new User(null, "kim", "young ki", "kimyoungi99@naver.com", "asdf", Role.USER, "asdf", 10000L);
+        this.user1 = new User(null, "kim", "young ki", "1q2w3e4r5t6y7u990123", "asdf", Role.USER, "asdf", 10000L);
         this.userDao.add(this.user1);
         this.product1 = new Product(null, this.user1.getId(), "keyboard", 10000L);
         this.product2 = new Product(null, this.user1.getId(), "mouse", 20000L);
@@ -72,6 +73,23 @@ public class OrderDaoTest {
         this.orderDao.update(this.order1);
 
         checkSameOrder(this.order1, this.orderDao.findById(this.order1.getId()));
+    }
+
+    @Test
+    public void findAllByUserEmail() {
+        this.order1 = new Order(null, this.product1.getId(), this.user1.getId(), LocalDateTime.now(), "Seoul",3, OrderStatus.PAYED);
+        this.orderDao.add(this.order1);
+
+        List<Order> orderList = this.orderDao.findAllByUserEmail("1q2w3e4r5t6y7u990123");
+        assertThat(orderList.size()).isEqualTo(1);
+        checkSameOrder(this.order1, orderList.get(0));
+
+        this.order2 = new Order(null, this.product2.getId(), this.user1.getId(), LocalDateTime.now(), "Busan",1, OrderStatus.PAYED);
+        this.orderDao.add(this.order2);
+
+        orderList = this.orderDao.findAllByUserEmail("1q2w3e4r5t6y7u990123");
+        assertThat(orderList.size()).isEqualTo(2);
+        checkSameOrder(this.order2, orderList.get(1));
     }
 
     private void checkSameOrder(Order order1, Order order2) {

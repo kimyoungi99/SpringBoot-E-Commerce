@@ -2,6 +2,7 @@ package com.ecommerce.servercommon.dto;
 
 import com.ecommerce.servercommon.domain.enums.OrderStatus;
 import com.ecommerce.servercommon.domain.order.Order;
+import lombok.Builder;
 import lombok.Data;
 
 import java.io.Serializable;
