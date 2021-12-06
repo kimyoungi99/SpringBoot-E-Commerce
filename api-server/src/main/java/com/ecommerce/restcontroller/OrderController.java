@@ -9,10 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.naming.AuthenticationException;
 
@@ -33,13 +30,27 @@ public class OrderController {
 
         this.orderService.sendOrderMessage(
                 orderDto,
-                authenticationValidator.validateAndGetName(authentication)
+                this.authenticationValidator.validateAndGetName(authentication)
         );
 
         return responseBuilder.jsonResponseBuild(
-          HttpStatus.OK,
-          "주문 요청 성공",
-          null
+                HttpStatus.OK,
+                "주문 요청 성공",
+                null
+        );
+    }
+
+    @GetMapping
+    public ResponseEntity<HttpResponseDto> getAllOrder(
+            Authentication authentication
+            ) throws AuthenticationException {
+
+        return responseBuilder.jsonResponseBuild(
+                HttpStatus.OK,
+                "주문 조회 성공",
+                this.orderService.getAllOrder(
+                        this.authenticationValidator.validateAndGetName(authentication)
+                )
         );
     }
 }

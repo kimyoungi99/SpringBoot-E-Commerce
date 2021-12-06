@@ -41,6 +41,15 @@
         SELECT * FROM product_order
     </select>
 
+    <!--유저 이메일을 통한 유저의 모든 product find -->
+    <select id="findAllByUserEmail" resultMap="selectOrderMap" parameterType="String">
+        SELECT * FROM product_order
+        WHERE buyer_id = (
+            SELECT _id FROM user
+            WHERE email = #{userEmail}
+            )
+    </select>
+
     <!-- resultMap -->
     <resultMap id="selectOrderMap" type="Order">
         <result column="_id" property="id"/>

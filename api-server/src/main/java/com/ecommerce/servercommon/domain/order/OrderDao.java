@@ -15,4 +15,6 @@ public interface OrderDao {
     void update(Order order);
 
     void deleteById(Long id);
+
+    List<Order> findAllByUserEmail(String userEmail);
 }
