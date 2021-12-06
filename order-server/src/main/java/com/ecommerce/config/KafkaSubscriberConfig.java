@@ -21,7 +21,7 @@ import java.util.Map;
 @Configuration
 public class KafkaSubscriberConfig {
 
-    @Value(value = "${kafka.bootstrap}")
+    @Value(value = "${spring.kafka.bootstrap-servers}")
     private String bootstrap;
 
     public ConsumerFactory<String, OrderDto> orderConsumerFactory() {
