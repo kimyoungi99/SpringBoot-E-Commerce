@@ -1,11 +1,12 @@
 version: "3.7"
 
 services:
-
   mysql:
     platform: linux/x86_64
     image: mysql:5.7
-    command: [ 
+    command: [
+      "--lower_case_table_names=1",
+      "--ignore-db-dir=lost+found",
       "--character-set-server=utf8",
       "--collation-server=utf8_general_ci",
       ]
@@ -21,32 +22,50 @@ services:
       - "3306:3306"
     container_name: ecommerce-mysql
 
-  # api-server:
-  #   image: gcr.io/yk-ecommerce/api-server
-  #   ports:
-  #     - "8080:8080"
-  #   container_name: api-server
-  #   restart: always
-  #   depends_on:
-  #     - mysql
-  #   environment:
-  #     MYSQL_DATABASE: ecommerce
-  #     MYSQL_ROOT_PASSWORD: root
-  #     MYSQL_USER: root
-  #     MYSQL_PASSWORD: root
-  #     SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/ecommerce?useUnicode=yes&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Seoul
+  api-server:
+    image: gcr.io/yk-ecommerce/api-server
+    ports:
+      - "8080:8080"
+    container_name: api-server
+    restart: always
+    depends_on:
+      - mysql
+    environment:
+      SPRINGBOOT_DB_USER: root
+      SPRINGBOOT_DB_PASSWORD: root
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/ecommerce?useUnicode=yes&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Seoul
+    
+  order-server:
+    image: gcr.io/yk-ecommerce/order-server
+    ports:
+      - "8000:8000"
+    container_name: order-server
+    restart: always
+    depends_on:
+      - mysql
+      - kafka
+    environment:
+      SPRINGBOOT_DB_USER: root
+      SPRINGBOOT_DB_PASSWORD: root
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/ecommerce?useUnicode=yes&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Seoul
+  
+  zookeeper:
+    container_name: ecommerce-zookeeper
+    image: wurstmeister/zookeeper:latest
+    ports:
+      - "2181:2181"
 
-  # order-server:
-  #   image: gcr.io/yk-ecommerce/order-server
-  #   ports:
-  #     - "8000:8000"
-  #   container_name: order-server
-  #   restart: always
-  #   depends_on:
-  #     - mysql
-  #   environment:
-  #     MYSQL_DATABASE: ecommerce
-  #     MYSQL_ROOT_PASSWORD: root
-  #     MYSQL_USER: root
-  #     MYSQL_PASSWORD: root
-  #     SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/ecommerce?useUnicode=yes&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Seoul
+  kafka:
+    container_name: ecommerce-kafka
+    image: wurstmeister/kafka:latest
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
+      KAFKA_ADVERTISED_PORT: 9092
+      KAFKA_CREATE_TOPICS: "order-service:1:1" # Topic명:Partition개수:Replica개수
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock

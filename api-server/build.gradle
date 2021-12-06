@@ -5,6 +5,20 @@ plugins {
 	id 'com.google.cloud.tools.jib' version '3.1.4'
 }
 
+jib {
+	to {
+		image = 'gcr.io/yk-ecommerce/api-server'
+	}
+	from {
+		platforms {
+			platform {
+				architecture = "arm64"
+				os = "linux"
+			}
+		}
+	}
+}
+
 jib.to.image = 'gcr.io/yk-ecommerce/api-server'
 group = 'com'
 version = '0.0.1-SNAPSHOT'
