@@ -1,10 +1,12 @@
 package com.ecommerce.servercommon.dto;
 
 import com.ecommerce.servercommon.domain.product.Product;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-public class ProductDto {
+@AllArgsConstructor
+public class ProductAddDto {
     private String name;
     private Long price;
 

@@ -1,13 +1,16 @@
 package com.ecommerce.service;
 
+import com.ecommerce.common.security.AuthenticationValidator;
 import com.ecommerce.servercommon.domain.product.Product;
 import com.ecommerce.servercommon.domain.product.ProductDao;
-import com.ecommerce.servercommon.domain.user.User;
 import com.ecommerce.servercommon.domain.user.UserDao;
-import com.ecommerce.servercommon.dto.ProductDto;
+import com.ecommerce.servercommon.dto.ProductAddDto;
+import com.ecommerce.servercommon.dto.ProductResponseDto;
+import com.ecommerce.servercommon.dto.ProductUpdateDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.naming.AuthenticationException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductService {
 
+    private final AuthenticationValidator authenticationValidator;
     private final ProductDao productDao;
     private final UserDao userDao;
 
@@ -26,10 +30,26 @@ public class ProductService {
         return result;
     }
 
-    public void addProduct(ProductDto productDto, String sellerEmail) {
-        Product product = productDto.toEntity();
+    public Long addProduct(ProductAddDto productAddDto, String sellerEmail) {
+        Product product = productAddDto.toEntity();
         product.setSellerId(userDao.findByEmail(sellerEmail).getId());
         this.productDao.add(product);
+        return product.getId();
     }
 
+    public void updateProduct(ProductUpdateDto productUpdateDto, String userEmail) throws AuthenticationException {
+        Product product = productUpdateDto.toEntity();
+
+        // check userId ==  sellerId
+        this.authenticationValidator.validateUser(userEmail, this.productDao.findSellerById(product.getId()).getEmail());
+
+        product.setSellerId(this.userDao.findByEmail(userEmail).getId());
+        this.productDao.update(product);
+    }
+
+    public void deleteProduct(Long id, String userEmail) throws AuthenticationException {
+        this.authenticationValidator.validateUser(userEmail, this.productDao.findSellerById(id).getEmail());
+
+        this.productDao.deleteById(id);
+    }
 }

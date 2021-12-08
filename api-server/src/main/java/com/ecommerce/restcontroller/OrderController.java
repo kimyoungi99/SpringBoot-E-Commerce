@@ -1,6 +1,6 @@
 package com.ecommerce.restcontroller;
 
-import com.ecommerce.common.config.security.AuthenticationValidator;
+import com.ecommerce.common.security.AuthenticationValidator;
 import com.ecommerce.common.response.HttpResponseDto;
 import com.ecommerce.common.response.ResponseBuilder;
 import com.ecommerce.servercommon.dto.OrderDto;

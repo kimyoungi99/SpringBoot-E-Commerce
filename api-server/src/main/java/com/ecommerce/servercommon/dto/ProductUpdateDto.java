@@ -1,9 +1,11 @@
 package com.ecommerce.servercommon.dto;
 
 import com.ecommerce.servercommon.domain.product.Product;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class ProductUpdateDto {
 
     private Long id;
