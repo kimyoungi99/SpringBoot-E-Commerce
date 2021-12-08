@@ -46,4 +46,10 @@ public class ProductService {
         product.setSellerId(this.userDao.findByEmail(userEmail).getId());
         this.productDao.update(product);
     }
+
+    public void deleteProduct(Long id, String userEmail) throws AuthenticationException {
+        this.authenticationValidator.validateUser(userEmail, this.productDao.findSellerById(id).getEmail());
+
+        this.productDao.deleteById(id);
+    }
 }

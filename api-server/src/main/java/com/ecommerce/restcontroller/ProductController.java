@@ -67,4 +67,21 @@ public class ProductController {
                 null
         );
     }
+
+    @DeleteMapping(value="/{id}")
+    public ResponseEntity<HttpResponseDto> deleteProduct(
+            @PathVariable Long id,
+            Authentication authentication
+    ) throws AuthenticationException {
+        this.productService.deleteProduct(
+                id,
+                authenticationValidator.validateAndGetName(authentication)
+        );
+
+        return responseBuilder.jsonResponseBuild(
+                HttpStatus.OK,
+                "상품 제거 성공",
+                null
+        );
+    }
 }
