@@ -46,5 +46,4 @@ public class ProductService {
         product.setSellerId(this.userDao.findByEmail(userEmail).getId());
         this.productDao.update(product);
     }
-
 }

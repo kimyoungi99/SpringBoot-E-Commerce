@@ -33,7 +33,7 @@ public class ProductController {
         );
     }
 
-    @PostMapping(value = "/add")
+    @PostMapping
     public ResponseEntity<HttpResponseDto> addProduct(
             @RequestBody ProductAddDto productAddDto,
             Authentication authentication
@@ -51,6 +51,7 @@ public class ProductController {
         );
     }
 
+    @PutMapping
     public ResponseEntity<HttpResponseDto> updateProduct(
             @RequestBody ProductUpdateDto productUpdateDto,
             Authentication authentication
