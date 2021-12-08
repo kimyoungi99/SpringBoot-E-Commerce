@@ -26,7 +26,7 @@ public class ProductDaoTest {
 
     @BeforeEach
     public void setUp() {
-        this.user1 = new User(null, "kim", "young ki", "kimyoungi99@naver.com", "asdf", Role.USER, "asdf", 10000L);
+        this.user1 = new User(null, "kim", "young ki", "990318", "asdf", Role.USER, "asdf", 10000L);
         this.userDao.add(this.user1);
         this.product1 = new Product(null, this.user1.getId(), "keyboard", 10000L);
         this.product2 = new Product(null, this.user1.getId(), "mouse", 20000L);

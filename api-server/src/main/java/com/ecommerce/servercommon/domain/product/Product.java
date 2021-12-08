@@ -1,5 +1,6 @@
 package com.ecommerce.servercommon.domain.product;
 
+import com.ecommerce.servercommon.dto.ProductResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,4 +13,13 @@ public class Product {
     private Long sellerId;
     private String name;
     private Long price;
+
+    public ProductResponseDto toResponseDto() {
+        return ProductResponseDto.builder()
+                .id(this.id)
+                .sellerId(this.sellerId)
+                .name(this.name)
+                .price(this.price)
+                .build();
+    }
 }

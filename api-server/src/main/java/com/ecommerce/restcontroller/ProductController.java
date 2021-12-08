@@ -1,15 +1,15 @@
 package com.ecommerce.restcontroller;
 
-import com.ecommerce.common.config.security.AuthenticationValidator;
+import com.ecommerce.common.security.AuthenticationValidator;
 import com.ecommerce.common.response.HttpResponseDto;
 import com.ecommerce.common.response.ResponseBuilder;
-import com.ecommerce.servercommon.dto.ProductDto;
+import com.ecommerce.servercommon.dto.ProductAddDto;
+import com.ecommerce.servercommon.dto.ProductUpdateDto;
 import com.ecommerce.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.naming.AuthenticationException;
@@ -35,18 +35,34 @@ public class ProductController {
 
     @PostMapping(value = "/add")
     public ResponseEntity<HttpResponseDto> addProduct(
-            @RequestBody ProductDto productDto,
+            @RequestBody ProductAddDto productAddDto,
             Authentication authentication
     ) throws AuthenticationException {
 
         this.productService.addProduct(
-                productDto,
+                productAddDto,
                 authenticationValidator.validateAndGetName(authentication)
         );
 
         return responseBuilder.jsonResponseBuild(
                 HttpStatus.OK,
                 "상품 등록 성공",
+                null
+        );
+    }
+
+    public ResponseEntity<HttpResponseDto> updateProduct(
+            @RequestBody ProductUpdateDto productUpdateDto,
+            Authentication authentication
+    ) throws AuthenticationException {
+        this.productService.updateProduct(
+                productUpdateDto,
+                authenticationValidator.validateAndGetName(authentication)
+        );
+
+        return responseBuilder.jsonResponseBuild(
+                HttpStatus.OK,
+                "상품 수정 성공",
                 null
         );
     }
