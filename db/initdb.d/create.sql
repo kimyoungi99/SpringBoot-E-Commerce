@@ -33,3 +33,14 @@ CREATE TABLE IF NOT EXISTS product_order (
     FOREIGN KEY (product_id) REFERENCES product (_id),
     FOREIGN KEY (buyer_id) REFERENCES user (_id)
 );
+
+CREATE TABLE IF NOT EXISTS review (
+    _id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    order_id BIGINT NOT NULL,
+    reviewer_id BIGINT NOT NULL,
+    star DECIMAL(2,1) NOT NULL,
+    review VARCHAR(200) NOT NULL,
+
+    FOREIGN KEY (order_id) REFERENCES product_order (_id),
+    FOREIGN KEY (reviewer_id) REFERENCES user (_id)
+);

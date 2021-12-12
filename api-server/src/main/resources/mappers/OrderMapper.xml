@@ -19,10 +19,10 @@
     </select>
 
     <!--id로 삭제 -->
-    <select id="deleteById" parameterType="Long">
+    <delete id="deleteById" parameterType="Long">
         DELETE FROM product_order
         WHERE _id = #{id}
-    </select>
+    </delete>
 
     <!--product 수정 -->
     <select id="update" parameterType="Product">
