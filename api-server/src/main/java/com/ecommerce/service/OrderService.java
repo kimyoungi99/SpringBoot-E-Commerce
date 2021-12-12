@@ -30,7 +30,7 @@ public class OrderService {
 
     public void sendOrderMessage(OrderDto orderDto, String userEmail) {
         orderDto.setOrderTime(LocalDateTime.now());
-        orderDto.setBuyerId(userDao.findByEmail(userEmail).getId());
+        orderDto.setBuyerId(this.userDao.findByEmail(userEmail).getId());
         this.kafkaTemplate.send(this.orderTopicName, orderDto);
         log.info("주문 메세지 전송: " + orderDto.toString());
     }
