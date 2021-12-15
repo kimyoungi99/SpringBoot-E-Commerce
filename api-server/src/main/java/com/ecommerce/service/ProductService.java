@@ -45,7 +45,7 @@ public class ProductService {
                 .reviewCount(0L)
                 .sellCount(0L)
                 .build();
-        
+
         this.productDetailsDao.add(pd);
         return product.getId();
     }

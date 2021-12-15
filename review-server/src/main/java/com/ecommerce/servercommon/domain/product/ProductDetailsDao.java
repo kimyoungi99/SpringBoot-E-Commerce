@@ -13,4 +13,10 @@ public interface ProductDetailsDao {
     void incrementSellCount(Long id);
 
     void incrementReviewCount(Long id);
+
+    void update(ProductDetails productDetails);
+
+    ProductDetails findByProductId(Long productId);
+
+    ProductDetails findByOrderId(Long orderId);
 }

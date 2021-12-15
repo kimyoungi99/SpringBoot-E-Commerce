@@ -25,13 +25,13 @@
     </delete>
 
     <!--product 수정 -->
-    <select id="update" parameterType="Product">
+    <update id="update" parameterType="Product">
         UPDATE product
         SET name = #{name},
             seller_id = #{sellerId},
             price = #{price}
         WHERE _id = #{id}
-    </select>
+    </update>
 
     <!--모든 product find -->
     <select id="findAll" resultMap="selectProductMap">

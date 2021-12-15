@@ -16,6 +16,7 @@ public class ReviewDto implements Serializable {
     public Review toEntity() {
         return Review.builder()
                 .orderId(this.orderId)
+                .reviewerId(this.reviewerId)
                 .star(this.star)
                 .review(this.review)
                 .build();
