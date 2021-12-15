@@ -44,3 +44,13 @@ CREATE TABLE IF NOT EXISTS review (
     FOREIGN KEY (order_id) REFERENCES product_order (_id),
     FOREIGN KEY (reviewer_id) REFERENCES user (_id)
 );
+
+CREATE TABLE IF NOT EXISTS product_details (
+    _id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    product_id BIGINT NOT NULL,
+    rating DECIMAL(2,1) NOT NULL,
+    sell_count BIGINT NOT NULL,
+    review_count BIGINT NOT NULL,
+
+    FOREIGN KEY (product_id) REFERENCES product (_id)
+);

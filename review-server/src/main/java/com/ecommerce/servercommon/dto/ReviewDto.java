@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 @Data
 public class ReviewDto implements Serializable {
     private Long orderId;
+    private Long reviewerId;
     private BigDecimal star;
     private String review;
 
