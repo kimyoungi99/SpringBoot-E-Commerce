@@ -3,6 +3,8 @@ package com.ecommerce.service;
 import com.ecommerce.common.security.AuthenticationValidator;
 import com.ecommerce.servercommon.domain.product.Product;
 import com.ecommerce.servercommon.domain.product.ProductDao;
+import com.ecommerce.servercommon.domain.product.ProductDetails;
+import com.ecommerce.servercommon.domain.product.ProductDetailsDao;
 import com.ecommerce.servercommon.domain.user.UserDao;
 import com.ecommerce.servercommon.dto.ProductAddDto;
 import com.ecommerce.servercommon.dto.ProductResponseDto;
@@ -11,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.naming.AuthenticationException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +23,7 @@ public class ProductService {
 
     private final AuthenticationValidator authenticationValidator;
     private final ProductDao productDao;
+    private final ProductDetailsDao productDetailsDao;
     private final UserDao userDao;
 
     public List<Product> getAllProduct() {
@@ -34,6 +38,15 @@ public class ProductService {
         Product product = productAddDto.toEntity();
         product.setSellerId(userDao.findByEmail(sellerEmail).getId());
         this.productDao.add(product);
+
+        ProductDetails pd = ProductDetails.builder()
+                .productId(product.getId())
+                .rating(new BigDecimal("0.0"))
+                .reviewCount(0L)
+                .sellCount(0L)
+                .build();
+        
+        this.productDetailsDao.add(pd);
         return product.getId();
     }
 
