@@ -33,7 +33,7 @@ public class OrderController {
                 this.authenticationValidator.validateAndGetName(authentication)
         );
 
-        return responseBuilder.jsonResponseBuild(
+        return this.responseBuilder.jsonResponseBuild(
                 HttpStatus.OK,
                 "주문 요청 성공",
                 null

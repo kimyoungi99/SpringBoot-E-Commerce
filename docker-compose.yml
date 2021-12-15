@@ -35,8 +35,6 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/ecommerce?useUnicode=yes&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Seoul
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-    # links:
-    #   - kafka:kafka
 
   order-server:
     image: gcr.io/yk-ecommerce/order-server
@@ -50,8 +48,6 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/ecommerce?useUnicode=yes&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Seoul
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-    # links:
-    #   - kafka:kafka
   
   zookeeper:
     container_name: ecommerce-zookeeper
@@ -69,7 +65,7 @@ services:
     environment:
       KAFKA_ADVERTISED_HOST_NAME: kafka
       KAFKA_ADVERTISED_PORT: 9092
-      KAFKA_CREATE_TOPICS: "test:1:1"
+      KAFKA_CREATE_TOPICS: "order:1:1"
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
