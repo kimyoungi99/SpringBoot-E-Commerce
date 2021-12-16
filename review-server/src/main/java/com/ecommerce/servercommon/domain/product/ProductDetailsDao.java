@@ -10,9 +10,9 @@ public interface ProductDetailsDao {
 
     void deleteById(Long id);
 
-    void incrementSellCount(Long id);
+    void incrementSellCountByProductId(Long productId);
 
-    void incrementReviewCount(Long id);
+    void incrementReviewCountByProductId(Long productId);
 
     void update(ProductDetails productDetails);
 

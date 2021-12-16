@@ -59,8 +59,8 @@ public class ProductDetailsDaoTest {
     @Test
     public void increment() {
         this.productDetailsDao.add(this.productDetails1);
-        this.productDetailsDao.incrementSellCount(this.productDetails1.getId());
-        this.productDetailsDao.incrementReviewCount(this.productDetails1.getId());
+        this.productDetailsDao.incrementSellCountByProductId(this.productDetails1.getProductId());
+        this.productDetailsDao.incrementReviewCountByProductId(this.productDetails1.getProductId());
 
         assertThat(this.productDetailsDao.findById(this.productDetails1.getId()).getReviewCount()).isEqualTo(this.productDetails1.getReviewCount() + 1);
         assertThat(this.productDetailsDao.findById(this.productDetails1.getId()).getSellCount()).isEqualTo(this.productDetails1.getSellCount() + 1);
