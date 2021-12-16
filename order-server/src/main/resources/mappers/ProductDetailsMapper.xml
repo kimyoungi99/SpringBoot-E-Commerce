@@ -51,17 +51,17 @@
     </delete>
 
     <!-- 판매 수 1 증가 -->
-    <update id="incrementSellCount" parameterType="Long">
+    <update id="incrementSellCountByProductId" parameterType="Long">
         UPDATE product_details
         SET sell_count = sell_count + 1
-        WHERE _id = #{id}
+        WHERE product_id = #{productId}
     </update>
 
     <!-- 리뷰 수 1 증가 -->
-    <update id="incrementReviewCount" parameterType="Long">
+    <update id="incrementReviewCountByProductId" parameterType="Long">
         UPDATE product_details
         SET review_count = review_count + 1
-        WHERE _id = #{id}
+        WHERE product_id = #{productId}
     </update>
 
 

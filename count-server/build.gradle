@@ -7,7 +7,7 @@ plugins {
 
 jib {
     to {
-        image = 'gcr.io/yk-ecommerce/review-server'
+        image = 'gcr.io/yk-ecommerce/count-server'
     }
     from {
         platforms {

@@ -36,6 +36,32 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/ecommerce?useUnicode=yes&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Seoul
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
 
+  review-server:
+    image: gcr.io/yk-ecommerce/review-server
+    ports:
+      - "8001:8001"
+    container_name: review-server
+    restart: always
+    depends_on:
+      - mysql
+      - kafka
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/ecommerce?useUnicode=yes&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Seoul
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+
+  count-server:
+    image: gcr.io/yk-ecommerce/count-server
+    ports:
+      - "8002:8002"
+    container_name: count-server
+    restart: always
+    depends_on:
+      - mysql
+      - kafka
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/ecommerce?useUnicode=yes&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Seoul
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+
   order-server:
     image: gcr.io/yk-ecommerce/order-server
     ports:
