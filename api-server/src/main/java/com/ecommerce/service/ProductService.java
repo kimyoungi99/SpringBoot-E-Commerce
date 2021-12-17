@@ -51,7 +51,7 @@ public class ProductService {
 
         this.productDetailsDao.add(pd);
 
-        return product.getId();
+        return pd.getId();
     }
 
     public void updateProduct(ProductUpdateDto productUpdateDto, String userEmail) throws AuthenticationException {
