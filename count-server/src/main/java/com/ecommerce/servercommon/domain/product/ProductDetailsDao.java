@@ -2,6 +2,8 @@ package com.ecommerce.servercommon.domain.product;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.HashMap;
+
 @Mapper
 public interface ProductDetailsDao {
     void add(ProductDetails productDetails);
@@ -19,4 +21,6 @@ public interface ProductDetailsDao {
     ProductDetails findByProductId(Long productId);
 
     ProductDetails findByOrderId(Long orderId);
+
+    void updateSellCountAndStockByProductId(HashMap<String, Long> param);
 }

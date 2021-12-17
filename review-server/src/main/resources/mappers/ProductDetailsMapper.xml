@@ -8,8 +8,8 @@
 <mapper namespace="com.ecommerce.servercommon.domain.product.ProductDetailsDao">
     <!-- productDetails 삽입 -->
     <insert id="add" useGeneratedKeys="true" keyProperty="id" parameterType="ProductDetails">
-        INSERT INTO product_details (_id, product_id, rating, sell_count, review_count)
-        VALUES(#{id}, #{productId}, #{rating}, #{sellCount}, #{reviewCount})
+        INSERT INTO product_details (_id, product_id, rating, sell_count, review_count, stock)
+        VALUES(#{id}, #{productId}, #{rating}, #{sellCount}, #{reviewCount}, #{stock})
     </insert>
 
     <!-- productDetails 수정 -->
@@ -18,7 +18,8 @@
         SET product_id = #{productId},
             rating = #{rating},
             sell_count = #{sellCount},
-            review_count = #{reviewCount}
+            review_count = #{reviewCount},
+            stock = #{stock}
         WHERE
             _id = #{id}
     </update>
@@ -64,6 +65,14 @@
         WHERE product_id = #{productId}
     </update>
 
+    <!-- 수량 업데이트 -->
+    <update id="updateSellCountAndStockByProductId" parameterType="HashMap">
+        UPDATE product_details
+        SET sell_count = sell_count + #{quantity},
+            stock = stock - #{quantity}
+        WHERE product_id = #{productId}
+    </update>
+
 
     <!-- 상품 resultMap -->
     <resultMap id="selectProductDetailsMap" type="ProductDetails">
@@ -72,5 +81,6 @@
         <result column="rating" property="rating"/>
         <result column="sell_count" property="sellCount"/>
         <result column="reviewCount" property="reviewCount"/>
+        <result column="stock" property="stock"/>
     </resultMap>
 </mapper>

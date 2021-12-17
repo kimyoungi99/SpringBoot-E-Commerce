@@ -38,7 +38,7 @@ public class ProductDetailsDaoTest {
         this.product2 = new Product(null, this.user1.getId(), "mouse", 20000L);
         productDao.add(this.product1);
         productDao.add(this.product2);
-        this.productDetails1 = new ProductDetails(null, this.product1.getId(), new BigDecimal("0.0"), 0L, 0L);
+        this.productDetails1 = new ProductDetails(null, this.product1.getId(), new BigDecimal("0.0"), 0L, 0L, 500L);
     }
 
     @AfterEach

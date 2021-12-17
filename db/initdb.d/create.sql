@@ -51,6 +51,7 @@ CREATE TABLE IF NOT EXISTS product_details (
     rating DECIMAL(2,1) NOT NULL,
     sell_count BIGINT NOT NULL,
     review_count BIGINT NOT NULL,
+    stock BIGINT NOT NULL,
 
     FOREIGN KEY (product_id) REFERENCES product (_id)
 );

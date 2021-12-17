@@ -12,8 +12,9 @@ import lombok.NoArgsConstructor;
 public class ProductAddDto {
     private String name;
     private Long price;
+    private Long stock;
 
-    public Product toEntity() {
+    public Product toProductEntity() {
         return Product.builder()
                 .name(this.name)
                 .price(this.price)

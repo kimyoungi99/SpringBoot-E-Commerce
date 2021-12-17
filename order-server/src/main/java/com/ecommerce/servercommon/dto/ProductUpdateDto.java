@@ -11,8 +11,9 @@ public class ProductUpdateDto {
     private Long id;
     private String name;
     private Long price;
+    private Long stock;
 
-    public Product toEntity() {
+    public Product toProductEntity() {
         return Product.builder()
                 .id(this.id)
                 .name(this.name)

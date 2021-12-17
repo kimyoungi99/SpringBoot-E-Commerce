@@ -16,11 +16,11 @@ public class OrderDto implements Serializable {
     private String address;
     private Integer quantity;
 
-    public Order toEntity() {
+    public Order toEntityWithOrderStatus(OrderStatus orderStatus) {
         return Order.builder()
                 .productId(this.productId)
                 .buyerId(this.buyerId)
-                .orderStatus(OrderStatus.PAYED)
+                .orderStatus(orderStatus)
                 .orderTime(this.orderTime)
                 .address(this.address)
                 .quantity(this.quantity)

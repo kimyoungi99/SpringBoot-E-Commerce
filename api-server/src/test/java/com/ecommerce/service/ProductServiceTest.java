@@ -48,7 +48,7 @@ public class ProductServiceTest {
 
     @Test
     public void addProductTest() {
-        ProductAddDto productAddDto = new ProductAddDto("keyboard", 10000L);
+        ProductAddDto productAddDto = new ProductAddDto("keyboard", 10000L, 500L);
         Long productId = productService.addProduct(productAddDto, this.user1.getEmail());
 
         this.product1 = productDao.findById(productId);
@@ -60,7 +60,7 @@ public class ProductServiceTest {
     @Test
     public void updateProductTest() throws AuthenticationException {
         this.productDao.add(this.product1);
-        ProductUpdateDto productUpdate = new ProductUpdateDto(this.product1.getId(), "keyboard", 20000L);
+        ProductUpdateDto productUpdate = new ProductUpdateDto(this.product1.getId(), "keyboard", 20000L, 500L);
 
         productService.updateProduct(productUpdate, this.user1.getEmail());
 

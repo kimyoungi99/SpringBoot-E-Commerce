@@ -2,6 +2,9 @@ package com.ecommerce.service;
 
 import com.ecommerce.servercommon.domain.order.Order;
 import com.ecommerce.servercommon.domain.order.OrderDao;
+import com.ecommerce.servercommon.domain.product.Product;
+import com.ecommerce.servercommon.domain.product.ProductDetails;
+import com.ecommerce.servercommon.domain.product.ProductDetailsDao;
 import com.ecommerce.servercommon.domain.user.UserDao;
 import com.ecommerce.servercommon.dto.OrderDto;
 import com.ecommerce.servercommon.dto.OrderResponseDto;
@@ -24,11 +27,22 @@ public class OrderService {
     private final KafkaTemplate<String, OrderDto> kafkaTemplate;
     private final UserDao userDao;
     private final OrderDao orderDao;
+    private final ProductDetailsDao productDetailsDao;
 
     @Value(value = "${order.topic.name}")
     private String orderTopicName;
 
-    public void sendOrderMessage(OrderDto orderDto, String userEmail) {
+    public void sendOrderMessage(OrderDto orderDto, String userEmail) throws IllegalStateException {
+
+        // 리펙토링 필요
+        ProductDetails pd = this.productDetailsDao.findByProductId(orderDto.getProductId());
+        if(pd == null) {
+            throw new IllegalStateException("상품 미존재 오류");
+        }
+        if(pd.getStock() - orderDto.getQuantity() < 1) {
+            throw new IllegalStateException("품절 상품 오류");
+        }
+
         orderDto.setOrderTime(LocalDateTime.now());
         orderDto.setBuyerId(this.userDao.findByEmail(userEmail).getId());
         this.kafkaTemplate.send(this.orderTopicName, orderDto);
