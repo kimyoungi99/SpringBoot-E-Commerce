@@ -3,6 +3,7 @@ package com.ecommerce.servercommon.domain.product;
 import com.ecommerce.servercommon.domain.enums.Role;
 import com.ecommerce.servercommon.domain.user.User;
 import com.ecommerce.servercommon.domain.user.UserDao;
+import com.ecommerce.servercommon.dto.ProductWithDetailsDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -64,6 +65,13 @@ public class ProductDetailsDaoTest {
 
         assertThat(this.productDetailsDao.findById(this.productDetails1.getId()).getReviewCount()).isEqualTo(this.productDetails1.getReviewCount() + 1);
         assertThat(this.productDetailsDao.findById(this.productDetails1.getId()).getSellCount()).isEqualTo(this.productDetails1.getSellCount() + 1);
+    }
+
+    @Test
+    public void pwd() {
+        this.productDetailsDao.add(this.productDetails1);
+        ProductWithDetailsDto pwd = this.productDetailsDao.findProductWithDetailsByProductId(this.product1.getId());
+        System.out.println(pwd);
     }
 
     private void checkSameProductDetails(ProductDetails product1, ProductDetails product2) {

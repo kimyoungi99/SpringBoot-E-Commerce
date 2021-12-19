@@ -2,7 +2,6 @@ package com.ecommerce.servercommon.dto;
 
 import com.ecommerce.servercommon.domain.enums.OrderStatus;
 import com.ecommerce.servercommon.domain.order.Order;
-import lombok.Builder;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -15,6 +14,8 @@ public class OrderDto implements Serializable {
     private LocalDateTime orderTime;
     private String address;
     private Integer quantity;
+    private Long pay;
+    private Long usePoint;
 
     public Order toEntityWithOrderStatus(OrderStatus orderStatus) {
         return Order.builder()
@@ -24,6 +25,8 @@ public class OrderDto implements Serializable {
                 .orderTime(this.orderTime)
                 .address(this.address)
                 .quantity(this.quantity)
+                .pay(this.pay)
+                .usePoint(this.usePoint)
                 .build();
     }
 }

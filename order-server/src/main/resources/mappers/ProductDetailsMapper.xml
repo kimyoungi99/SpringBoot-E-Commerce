@@ -45,6 +45,28 @@
             )
     </select>
 
+    <!--id로 조회 -->
+    <select id="findProductWithDetailsByProductId" resultMap="selectProductWithDetailsMap" parameterType="Long">
+        USE ecommerce;
+        SELECT * FROM
+            (
+                SELECT p1._id as _id,
+                p2._id as details_id,
+                seller_id as seller_id,
+                name as name,
+                price as price,
+                rating as rating,
+                sell_count as sell_count,
+                review_count as review_count,
+                stock as stock
+
+                FROM product_details p2
+                INNER JOIN product p1
+                ON p2.product_id = p1._id
+            ) AS result
+        WHERE _id = 7
+    </select>
+
     <!--id로 삭제 -->
     <delete id="deleteById" parameterType="Long">
         DELETE FROM product_details
@@ -80,7 +102,20 @@
         <result column="product_id" property="productId"/>
         <result column="rating" property="rating"/>
         <result column="sell_count" property="sellCount"/>
-        <result column="reviewCount" property="reviewCount"/>
+        <result column="review_count" property="reviewCount"/>
+        <result column="stock" property="stock"/>
+    </resultMap>
+
+    <!-- pwd resultMap -->
+    <resultMap id="selectProductWithDetailsMap" type="ProductWithDetailsDto">
+        <result column="_id" property="id"/>
+        <result column="details_id" property="detailsId"/>
+        <result column="seller_id" property="sellerId"/>
+        <result column="name" property="name"/>
+        <result column="price" property="price"/>
+        <result column="rating" property="rating"/>
+        <result column="sell_count" property="sellCount"/>
+        <result column="review_count" property="reviewCount"/>
         <result column="stock" property="stock"/>
     </resultMap>
 </mapper>

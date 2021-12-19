@@ -23,7 +23,7 @@ public class OrderListener {
         log.info("주문 리스닝 성공: " + orderDto.toString());
         ack.acknowledge();
 
-        Order order = orderDto.toEntity();
+        Order order = orderDto.toEntityWithOrderStatus(OrderStatus.PAYED);
         order.setOrderStatus(OrderStatus.PAYED);
 
         orderDao.add(order);

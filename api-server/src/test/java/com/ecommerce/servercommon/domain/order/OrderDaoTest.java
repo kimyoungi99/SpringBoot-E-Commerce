@@ -43,6 +43,8 @@ public class OrderDaoTest {
         this.product2 = new Product(null, this.user1.getId(), "mouse", 20000L);
         this.productDao.add(this.product1);
         this.productDao.add(this.product2);
+        this.order1 = new Order(null, this.product1.getId(), this.user1.getId(), LocalDateTime.now(), "Seoul",3, OrderStatus.PAYED, 10L, 10L);
+        this.order2 = new Order(null, this.product2.getId(), this.user1.getId(), LocalDateTime.now(), "Busan",1, OrderStatus.PAYED, 10L, 10L);
     }
 
     @AfterEach
@@ -58,7 +60,6 @@ public class OrderDaoTest {
 
     @Test
     public void addAndFind() {
-        this.order1 = new Order(null, this.product1.getId(), this.user1.getId(), LocalDateTime.now(), "Seoul",3, OrderStatus.PAYED);
         this.orderDao.add(this.order1);
 
         checkSameOrder(this.order1, this.orderDao.findById(this.order1.getId()));
@@ -66,7 +67,6 @@ public class OrderDaoTest {
 
     @Test
     public void update() {
-        this.order1 = new Order(null, this.product1.getId(), this.user1.getId(), LocalDateTime.now(), "Seoul",3, OrderStatus.PAYED);
         this.orderDao.add(this.order1);
         this.order1.setOrderStatus(OrderStatus.PAYED);
         this.order1.setAddress("asdf");
@@ -77,14 +77,12 @@ public class OrderDaoTest {
 
     @Test
     public void findAllByUserEmail() {
-        this.order1 = new Order(null, this.product1.getId(), this.user1.getId(), LocalDateTime.now(), "Seoul",3, OrderStatus.PAYED);
         this.orderDao.add(this.order1);
 
         List<Order> orderList = this.orderDao.findAllByUserEmail("1q2w3e4r5t6y7u990123");
         assertThat(orderList.size()).isEqualTo(1);
         checkSameOrder(this.order1, orderList.get(0));
 
-        this.order2 = new Order(null, this.product2.getId(), this.user1.getId(), LocalDateTime.now(), "Busan",1, OrderStatus.PAYED);
         this.orderDao.add(this.order2);
 
         orderList = this.orderDao.findAllByUserEmail("1q2w3e4r5t6y7u990123");
@@ -97,6 +95,8 @@ public class OrderDaoTest {
         assertThat(order1.getOrderStatus()).isEqualTo(order2.getOrderStatus());
         assertThat(order1.getAddress()).isEqualTo(order2.getAddress());
         assertThat(order1.getQuantity()).isEqualTo(order2.getQuantity());
+        assertThat(order1.getPay()).isEqualTo(order2.getPay());
+        assertThat(order1.getUsePoint()).isEqualTo(order2.getUsePoint());
     }
 
 }

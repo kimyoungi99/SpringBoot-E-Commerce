@@ -8,6 +8,7 @@ import com.ecommerce.servercommon.domain.product.ProductDetailsDao;
 import com.ecommerce.servercommon.domain.user.UserDao;
 import com.ecommerce.servercommon.dto.OrderDto;
 import com.ecommerce.servercommon.dto.OrderResponseDto;
+import com.ecommerce.servercommon.dto.ProductWithDetailsDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,12 +36,15 @@ public class OrderService {
     public void sendOrderMessage(OrderDto orderDto, String userEmail) throws IllegalStateException {
 
         // 리펙토링 필요
-        ProductDetails pd = this.productDetailsDao.findByProductId(orderDto.getProductId());
-        if(pd == null) {
+        ProductWithDetailsDto productWithDetailsDto = this.productDetailsDao.findProductWithDetailsByProductId(orderDto.getProductId());
+        if(productWithDetailsDto == null) {
             throw new IllegalStateException("상품 미존재 오류");
         }
-        if(pd.getStock() - orderDto.getQuantity() < 1) {
+        if(productWithDetailsDto.getStock() - orderDto.getQuantity() < 1) {
             throw new IllegalStateException("품절 상품 오류");
+        }
+        if(orderDto.getPay() + orderDto.getUsePoint() != productWithDetailsDto.getPrice()) {
+            throw new IllegalStateException("가격 오류");
         }
 
         orderDto.setOrderTime(LocalDateTime.now());

@@ -29,6 +29,8 @@ CREATE TABLE IF NOT EXISTS product_order (
     address VARCHAR(100) NOT NULL,
     quantity INT NOT NULL,
     order_status TINYINT NOT NULL,
+    pay BIGINT NOT NULL,
+    use_point BIGINT NOT NULL,
 
     FOREIGN KEY (product_id) REFERENCES product (_id),
     FOREIGN KEY (buyer_id) REFERENCES user (_id)
