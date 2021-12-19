@@ -19,6 +19,8 @@ public class Order {
     private String address;
     private Integer quantity;
     private OrderStatus orderStatus;
+    private Long pay;
+    private Long usePoint;
 
     public OrderResponseDto toResponseDto() {
         return OrderResponseDto.builder()
@@ -29,6 +31,8 @@ public class Order {
                 .address(this.address)
                 .quantity(this.quantity)
                 .orderStatus(this.orderStatus)
+                .pay(this.pay)
+                .usePoint(this.usePoint)
                 .build();
     }
 }

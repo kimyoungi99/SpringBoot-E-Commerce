@@ -41,7 +41,7 @@ public class ReviewDaoTest {
         this.userDao.add(this.user1);
         this.product1 = new Product(null, this.user1.getId(), "keyboard", 10000L);
         this.productDao.add(this.product1);
-        this.order1 = new Order(null, this.product1.getId(), this.user1.getId(), LocalDateTime.now(), "Seoul",3, OrderStatus.PAYED);
+        this.order1 = new Order(null, this.product1.getId(), this.user1.getId(), LocalDateTime.now(), "Seoul",3, OrderStatus.PAYED, 10L, 10L);
         this.orderDao.add(this.order1);
     }
 

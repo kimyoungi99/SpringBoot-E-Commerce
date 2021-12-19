@@ -4,6 +4,7 @@ import com.ecommerce.servercommon.domain.enums.OrderStatus;
 import com.ecommerce.servercommon.domain.order.Order;
 import com.ecommerce.servercommon.domain.order.OrderDao;
 import com.ecommerce.servercommon.dto.OrderDto;
+import com.ecommerce.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class OrderListener {
 
-    private final OrderDao orderDao;
+    private final OrderService orderService;
 
     // 주문 확정을 위한 리스너
     @KafkaListener(topics = "${order.topic.name}", containerFactory = "orderConcurrentKafkaListenerContainerFactory")
@@ -23,10 +24,8 @@ public class OrderListener {
         log.info("주문 리스닝 성공: " + orderDto.toString());
         ack.acknowledge();
 
-        Order order = orderDto.toEntity();
-        order.setOrderStatus(OrderStatus.PAYED);
+        this.orderService.orderConfirm(orderDto);
 
-        orderDao.add(order);
         log.info("주문 저장 성공: " + orderDto.toString());
     }
 }

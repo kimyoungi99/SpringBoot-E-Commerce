@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 public enum OrderStatus {
-    PAYED(1), CANECLED(2), REFUNDED(3), SHIPPING(4), COMPLETE(5);
+    PAYED(1), REFUNDED(2), COMPLETE(3);
 
     private final int value;
 
@@ -18,12 +18,8 @@ public enum OrderStatus {
             case 1:
                 return OrderStatus.PAYED;
             case 2:
-                return OrderStatus.CANECLED;
-            case 3:
                 return OrderStatus.REFUNDED;
-            case 4:
-                return OrderStatus.SHIPPING;
-            case 5:
+            case 3:
                 return OrderStatus.COMPLETE;
             default:
                 throw new AssertionError("Unknown 'OrderStatus' Value: " + value);

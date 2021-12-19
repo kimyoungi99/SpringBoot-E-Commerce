@@ -15,4 +15,5 @@ public class ProductDetails {
     private BigDecimal rating;
     private Long sellCount;
     private Long reviewCount;
+    private Long stock;
 }

@@ -18,4 +18,6 @@ public class OrderResponseDto {
     private String address;
     private Integer quantity;
     private OrderStatus orderStatus;
+    private Long pay;
+    private Long usePoint;
 }
