@@ -64,6 +64,15 @@ public class UserDaoTest {
         });
     }
 
+    @Test
+    public void update() {
+        this.userDao.add(this.user1);
+        this.user1.setPoint(10L);
+        this.userDao.update(this.user1);
+
+        checkSameUser(this.user1, this.userDao.findByEmail(this.user1.getEmail()));
+    }
+
     private void checkSameUser(User user1, User user2) {
         assertThat(user1.getId()).isEqualTo(user2.getId());
         assertThat(user1.getEmail()).isEqualTo(user2.getEmail());
@@ -71,5 +80,6 @@ public class UserDaoTest {
         assertThat(user1.getLastName()).isEqualTo(user2.getLastName());
         assertThat(user1.getAddress()).isEqualTo(user2.getAddress());
         assertThat(user1.getRole()).isEqualTo(user2.getRole());
+        assertThat(user1.getPoint()).isEqualTo(user2.getPoint());
     }
 }

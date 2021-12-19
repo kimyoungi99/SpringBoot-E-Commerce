@@ -30,16 +30,18 @@
         WHERE email = #{email}
     </select>
 
-<!--    &lt;!&ndash;product 수정 &ndash;&gt;-->
-<!--    <select id="update" parameterType="Product">-->
-<!--        UPDATE product_order-->
-<!--        SET product_id = #{productId},-->
-<!--            order_time = #{orderTime},-->
-<!--            address = #{address},-->
-<!--            quantity = #{quantity},-->
-<!--            order_status = #{orderStatus.value}-->
-<!--        WHERE _id = #{id}-->
-<!--    </select>-->
+    <!--user 수정 -->
+    <select id="update" parameterType="Product">
+        UPDATE user
+        SET first_name = #{firstName},
+            last_name = #{lastName},
+            email = #{email},
+            password = #{password},
+            role = #{role},
+            address = #{address},
+            point = #{point}
+        WHERE _id = #{id}
+    </select>
 
 <!--    &lt;!&ndash;모든 product find &ndash;&gt;-->
 <!--    <select id="findAll" resultMap="selectOrderMap">-->
