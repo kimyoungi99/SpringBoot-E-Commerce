@@ -1,6 +1,7 @@
 package com.ecommerce.servercommon.domain.user;
 
 import com.ecommerce.servercommon.domain.enums.Role;
+import com.ecommerce.servercommon.dto.UserResponseDto;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -61,5 +62,16 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public UserResponseDto toResponseDto() {
+        return UserResponseDto.builder()
+                .firstName(this.firstName)
+                .lastName(this.lastName)
+                .email(this.email)
+                .address(this.address)
+                .point(this.point)
+                .build();
+
     }
 }
