@@ -6,6 +6,7 @@ import com.ecommerce.servercommon.domain.user.User;
 import com.ecommerce.servercommon.domain.user.UserDao;
 import com.ecommerce.servercommon.dto.UserJoinDto;
 import com.ecommerce.servercommon.dto.UserLoginDto;
+import com.ecommerce.servercommon.dto.UserResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -44,5 +45,11 @@ public class UserService {
             roles.add("SELLER");
         }
         return jwtTokenProvider.createToken(user.getUsername(), roles);
+    }
+
+    public UserResponseDto getUser(String userEmail) {
+        User user = userDao.findByEmail(userEmail);
+
+        return user.toResponseDto();
     }
 }

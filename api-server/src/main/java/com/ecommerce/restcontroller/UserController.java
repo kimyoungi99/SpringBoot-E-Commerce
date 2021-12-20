@@ -2,6 +2,7 @@ package com.ecommerce.restcontroller;
 
 import com.ecommerce.common.response.HttpResponseDto;
 import com.ecommerce.common.response.ResponseBuilder;
+import com.ecommerce.common.security.AuthenticationValidator;
 import com.ecommerce.servercommon.dto.UserJoinDto;
 import com.ecommerce.servercommon.dto.UserLoginDto;
 import com.ecommerce.service.UserService;
@@ -10,11 +11,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 
+import javax.naming.AuthenticationException;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,6 +26,7 @@ public class UserController {
 
     private final UserService userService;
     private final ResponseBuilder responseBuilder;
+    private final AuthenticationValidator authenticationValidator;
 
     // 회원가입
     @PostMapping(value = "/join")
@@ -51,6 +52,20 @@ public class UserController {
                 HttpStatus.OK,
                 "로그인 성공",
                 data
+        );
+    }
+
+    @GetMapping
+    public ResponseEntity<HttpResponseDto> getUser(
+            Authentication authentication
+    ) throws AuthenticationException {
+
+        return responseBuilder.jsonResponseBuild(
+                HttpStatus.OK,
+                "주문 조회 성공",
+                this.userService.getUser(
+                        this.authenticationValidator.validateAndGetName(authentication)
+                )
         );
     }
 }
