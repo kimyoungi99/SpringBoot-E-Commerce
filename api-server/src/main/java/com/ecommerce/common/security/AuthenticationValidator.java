@@ -1,9 +1,6 @@
 package com.ecommerce.common.security;
 
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Component;
-
-import javax.naming.AuthenticationException;
 
 public interface AuthenticationValidator {
 

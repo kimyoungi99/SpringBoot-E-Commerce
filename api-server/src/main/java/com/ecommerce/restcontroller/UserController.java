@@ -7,15 +7,12 @@ import com.ecommerce.servercommon.dto.UserJoinDto;
 import com.ecommerce.servercommon.dto.UserLoginDto;
 import com.ecommerce.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.naming.AuthenticationException;
-import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 

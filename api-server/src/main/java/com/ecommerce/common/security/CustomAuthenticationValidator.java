@@ -4,8 +4,6 @@ import com.ecommerce.common.exception.AuthorityException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import javax.naming.AuthenticationException;
-
 @Component
 public class CustomAuthenticationValidator implements AuthenticationValidator{
 
