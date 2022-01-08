@@ -12,8 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import javax.naming.AuthenticationException;
-
 @RestController
 @RequestMapping(value = "/api/product")
 @RequiredArgsConstructor
@@ -37,7 +35,7 @@ public class ProductController {
     public ResponseEntity<HttpResponseDto> addProduct(
             @RequestBody ProductAddDto productAddDto,
             Authentication authentication
-    ) throws AuthenticationException {
+    ) {
 
         this.productService.addProduct(
                 productAddDto,
@@ -55,7 +53,7 @@ public class ProductController {
     public ResponseEntity<HttpResponseDto> updateProduct(
             @RequestBody ProductUpdateDto productUpdateDto,
             Authentication authentication
-    ) throws AuthenticationException {
+    ) {
         this.productService.updateProduct(
                 productUpdateDto,
                 authenticationValidator.validateAndGetName(authentication)
@@ -72,7 +70,7 @@ public class ProductController {
     public ResponseEntity<HttpResponseDto> deleteProduct(
             @PathVariable Long id,
             Authentication authentication
-    ) throws AuthenticationException {
+    ) {
         this.productService.deleteProduct(
                 id,
                 authenticationValidator.validateAndGetName(authentication)

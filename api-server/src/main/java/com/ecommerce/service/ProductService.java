@@ -54,7 +54,7 @@ public class ProductService {
         return pd.getId();
     }
 
-    public void updateProduct(ProductUpdateDto productUpdateDto, String userEmail) throws AuthenticationException {
+    public void updateProduct(ProductUpdateDto productUpdateDto, String userEmail) {
         Product product = productUpdateDto.toProductEntity();
 
         // check userId ==  sellerId
@@ -64,7 +64,7 @@ public class ProductService {
         this.productDao.update(product);
     }
 
-    public void deleteProduct(Long id, String userEmail) throws AuthenticationException {
+    public void deleteProduct(Long id, String userEmail) {
         this.authenticationValidator.validateUser(userEmail, this.productDao.findSellerById(id).getEmail());
 
         this.productDao.deleteById(id);

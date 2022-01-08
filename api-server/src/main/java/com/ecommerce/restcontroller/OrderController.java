@@ -11,8 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import javax.naming.AuthenticationException;
-
 @RestController
 @RequestMapping(value = "/api/order")
 @RequiredArgsConstructor
@@ -26,7 +24,7 @@ public class OrderController {
     public ResponseEntity<HttpResponseDto> order(
             Authentication authentication,
             @RequestBody OrderDto orderDto
-    ) throws AuthenticationException {
+    ) {
 
         this.orderService.sendOrderMessage(
                 orderDto,
@@ -43,7 +41,7 @@ public class OrderController {
     @GetMapping
     public ResponseEntity<HttpResponseDto> getAllOrder(
             Authentication authentication
-            ) throws AuthenticationException {
+    ) {
 
         return responseBuilder.jsonResponseBuild(
                 HttpStatus.OK,
