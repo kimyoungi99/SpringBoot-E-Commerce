@@ -7,7 +7,7 @@ import javax.naming.AuthenticationException;
 
 public interface AuthenticationValidator {
 
-    String validateAndGetName(Authentication authentication) throws AuthenticationException;
+    String validateAndGetName(Authentication authentication);
 
-    void validateUser(String user1Email, String user2Email) throws AuthenticationException;
+    void validateUser(String user1Email, String user2Email);
 }

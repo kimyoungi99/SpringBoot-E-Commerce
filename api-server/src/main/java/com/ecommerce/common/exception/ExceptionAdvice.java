@@ -42,7 +42,7 @@ public class ExceptionAdvice {
         );
     }
 
-    @ExceptionHandler(AuthenticationException.class)
+    @ExceptionHandler(AuthorityException.class)
     public ResponseEntity<HttpResponseDto> handler(AuthenticationException e) {
         return responseBuilder.jsonResponseBuild(
                 HttpStatus.BAD_REQUEST,
@@ -51,7 +51,7 @@ public class ExceptionAdvice {
         );
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
+    @ExceptionHandler(OrderException.class)
     public ResponseEntity<HttpResponseDto> handler(IllegalArgumentException e) {
         return responseBuilder.jsonResponseBuild(
                 HttpStatus.BAD_REQUEST,

@@ -1,5 +1,9 @@
 package com.ecommerce.service;
 
+import com.ecommerce.common.exception.NotExistingProductException;
+import com.ecommerce.common.exception.PaymentException;
+import com.ecommerce.common.exception.PointException;
+import com.ecommerce.common.exception.SoldOutProductException;
 import com.ecommerce.servercommon.domain.order.Order;
 import com.ecommerce.servercommon.domain.order.OrderDao;
 import com.ecommerce.servercommon.domain.product.Product;
@@ -34,22 +38,22 @@ public class OrderService {
     @Value(value = "${order.topic.name}")
     private String orderTopicName;
 
-    public void sendOrderMessage(OrderDto orderDto, String userEmail) throws IllegalStateException {
+    public void sendOrderMessage(OrderDto orderDto, String userEmail) {
 
         // 리펙토링 필요
         ProductWithDetailsDto productWithDetailsDto = this.productDetailsDao.findProductWithDetailsByProductId(orderDto.getProductId());
         User buyer = this.userDao.findByEmail(userEmail);
-        if(productWithDetailsDto == null) {
-            throw new IllegalStateException("상품 미존재 오류");
+        if (productWithDetailsDto == null) {
+            throw new NotExistingProductException("상품 미존재 오류");
         }
-        if(productWithDetailsDto.getStock() - orderDto.getQuantity() < 1) {
-            throw new IllegalStateException("품절 상품 오류");
+        if (productWithDetailsDto.getStock() - orderDto.getQuantity() < 1) {
+            throw new SoldOutProductException("품절 상품 오류");
         }
-        if(orderDto.getPay() + orderDto.getUsePoint() != productWithDetailsDto.getPrice()) {
-            throw new IllegalStateException("가격 오류");
+        if (orderDto.getPay() + orderDto.getUsePoint() != productWithDetailsDto.getPrice()) {
+            throw new PaymentException("가격 오류");
         }
-        if(buyer.getPoint() < orderDto.getUsePoint()) {
-            throw new IllegalStateException("포인트 부족 오류");
+        if (buyer.getPoint() < orderDto.getUsePoint()) {
+            throw new PointException("포인트 부족 오류");
         }
 
         orderDto.setOrderTime(LocalDateTime.now());
