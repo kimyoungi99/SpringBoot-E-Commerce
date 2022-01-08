@@ -59,13 +59,4 @@ public class ExceptionAdvice {
                 null
         );
     }
-
-    @ExceptionHandler(IllegalStateException.class)
-    public ResponseEntity<HttpResponseDto> handler(IllegalStateException e) {
-        return responseBuilder.jsonResponseBuild(
-                HttpStatus.BAD_REQUEST,
-                e.getMessage(),
-                null
-        );
-    }
 }
