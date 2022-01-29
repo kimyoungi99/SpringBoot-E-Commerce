@@ -10,11 +10,13 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDate;
 import java.util.Date;
 
-@Document(collection = "users")
 @Getter
+@Document(collection = "users")
 public class UserEntity {
 
     @Id
+    private String id;
+
     private String email;
 
     private String password;
@@ -68,11 +70,12 @@ public class UserEntity {
 
     public UserResponseDto toResponseDto() {
         return UserResponseDto.builder()
-                .email(email)
-                .address(address)
-                .birthdate(birthdate)
-                .point(point)
-                .createdDate(createdDate)
+                .id(this.id)
+                .email(this.email)
+                .address(this.address)
+                .birthdate(this.birthdate)
+                .point(this.point)
+                .createdDate(this.createdDate)
                 .build();
     }
 }

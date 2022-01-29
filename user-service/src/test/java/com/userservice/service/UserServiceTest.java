@@ -122,6 +122,7 @@ class UserServiceTest {
     }
 
     private void CheckSameUserResponseDto(UserResponseDto userResponseDto1, UserResponseDto userResponseDto2) {
+        assertThat(userResponseDto1.getId()).isEqualTo(userResponseDto2.getId());
         assertThat(userResponseDto1.getEmail()).isEqualTo(userResponseDto2.getEmail());
         assertThat(userResponseDto1.getAddress()).isEqualTo(userResponseDto2.getAddress());
         assertThat(userResponseDto1.getBirthdate()).isEqualTo(userResponseDto2.getBirthdate());
@@ -130,6 +131,7 @@ class UserServiceTest {
     }
 
     private void checkSameUserEntityWithoutCreatedTime(UserEntity userEntity1, UserEntity userEntity2) {
+        assertThat(userEntity1.getId()).isEqualTo(userEntity2.getId());
         assertThat(userEntity1.getEmail()).isEqualTo(userEntity2.getEmail());
         assertThat(userEntity1.getPassword()).isEqualTo(userEntity2.getPassword());
         assertThat(userEntity1.getAddress()).isEqualTo(userEntity2.getAddress());

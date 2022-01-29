@@ -54,7 +54,7 @@ class MongoDBUserDaoTest {
         this.userDao.insert(this.userEntity1);
         UserEntity userEntity = this.userDao.findByEmail(this.userEntity1.getEmail()).get();
 
-        this.checkSameUserEntity(this.userEntity1, userEntity);
+        checkSameUserEntity(this.userEntity1, userEntity);
     }
 
     @Test
@@ -68,6 +68,7 @@ class MongoDBUserDaoTest {
     }
 
     private void checkSameUserEntity(UserEntity userEntity1, UserEntity userEntity2) {
+        assertThat(userEntity1.getId()).isEqualTo(userEntity2.getId());
         assertThat(userEntity1.getEmail()).isEqualTo(userEntity2.getEmail());
         assertThat(userEntity1.getPassword()).isEqualTo(userEntity2.getPassword());
         assertThat(userEntity1.getAddress()).isEqualTo(userEntity2.getAddress());
