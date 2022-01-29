@@ -8,6 +8,8 @@ import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -31,7 +33,10 @@ class MongoDBUserDaoTest {
                 .email("kimyoungi99@naver9.com")
                 .password("Asdf")
                 .address("seoul, korea")
-                .birthdate("1999/03/18")
+                .birthdate(LocalDate.parse(
+                        "1999-03-18",
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                ))
                 .point(0L)
                 .createdDate(new Date())
                 .build();
@@ -43,7 +48,7 @@ class MongoDBUserDaoTest {
     }
 
     @Test
-    @DisplayName("MongoDB 유저 저장 & 이메일로 조회 테스트")
+    @DisplayName("유저 저장 & 이메일로 조회 테스트")
     public void insertAndFindByEmailTest() {
 
         this.userDao.insert(this.userEntity1);
@@ -53,7 +58,7 @@ class MongoDBUserDaoTest {
     }
 
     @Test
-    @DisplayName("MongoDB 유저 삭제 테스트")
+    @DisplayName("유저 삭제 테스트")
     public void deleteTest() {
 
         this.userDao.insert(this.userEntity1);

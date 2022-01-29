@@ -1,5 +1,6 @@
 package com.userservice.service;
 
+import com.userservice.mapper.UserJoinDtoToUserEntityMapper;
 import com.userservice.dao.UserDao;
 import com.userservice.domain.UserEntity;
 import com.userservice.dto.UserDeleteDto;
@@ -19,7 +20,8 @@ public class UserService {
     private final UserDao userDao;
 
     public void join(UserJoinDto userJoinDto) {
-        UserEntity userEntity = userJoinDto.toEntity();
+        UserEntity userEntity = UserJoinDtoToUserEntityMapper.map(userJoinDto);
+
         // set account created date
         userEntity.setCreatedDate(new Date());
 

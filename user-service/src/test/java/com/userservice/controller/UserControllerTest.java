@@ -18,6 +18,8 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Optional;
 
@@ -40,7 +42,10 @@ class UserControllerTest {
                 .email("kimyoungi99@naver9.com")
                 .password("Asdf")
                 .address("seoul, korea")
-                .birthdate("1999/03/18")
+                .birthdate(LocalDate.parse(
+                        "1999-03-18",
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                ))
                 .point(0L)
                 .createdDate(new Date())
                 .build();
@@ -49,7 +54,7 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("UserController join 테스트")
+    @DisplayName("join 테스트")
     public void joinTest() {
         ArgumentCaptor<UserEntity> userEntityArgumentCaptor
                 = ArgumentCaptor.forClass(UserEntity.class);
@@ -58,7 +63,7 @@ class UserControllerTest {
                 .email("kimyoungi99@naver9.com")
                 .password("Asdf")
                 .address("seoul, korea")
-                .birthdate("1999/03/18")
+                .birthdateString("1999-03-18")
                 .point(0L)
                 .build()
         );
@@ -68,7 +73,7 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("UserController delete 테스트")
+    @DisplayName("delete 테스트")
     public void deleteTest() {
         ArgumentCaptor<String> stringArgumentCaptor
                 = ArgumentCaptor.forClass(String.class);
@@ -84,7 +89,7 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("UserController info 테스트")
+    @DisplayName("info 테스트")
     public void infoTest() {
         Mockito.when(this.userDao.findByEmail(this.userEntity1.getEmail())).thenReturn(Optional.ofNullable(this.userEntity1));
 
