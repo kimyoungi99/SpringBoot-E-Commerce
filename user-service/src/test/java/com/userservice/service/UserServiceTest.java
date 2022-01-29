@@ -5,6 +5,8 @@ import com.userservice.domain.UserEntity;
 import com.userservice.dto.UserDeleteDto;
 import com.userservice.dto.UserJoinDto;
 import com.userservice.dto.UserResponseDto;
+import com.userservice.exception.UserNotExistingException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -88,6 +90,16 @@ class UserServiceTest {
         UserResponseDto userResponseDto = this.userService.info(this.userEntity1.getEmail());
 
         CheckSameUserResponseDto(userResponseDto, this.userEntity1.toResponseDto());
+    }
+
+    @Test
+    @DisplayName("UserService info 유저 X 테스트")
+    public void infoUserNotExistingExceptionTest() {
+        Mockito.when(this.userDao.findByEmail("")).thenReturn(Optional.ofNullable(null));
+
+        Assertions.assertThrows(UserNotExistingException.class, () -> {
+            this.userService.info("");
+        });
     }
 
     private void CheckSameUserResponseDto(UserResponseDto userResponseDto1, UserResponseDto userResponseDto2) {
