@@ -2,20 +2,24 @@ package com.userservice.dao;
 
 import com.userservice.common.config.MongoDBConfig;
 import com.userservice.domain.UserEntity;
+import com.userservice.exception.DuplicateEmailException;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.test.context.TestPropertySource;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DataMongoTest
 @Import(MongoDBConfig.class)
+@TestPropertySource(locations="/application.properties")
 class MongoDBUserDaoTest {
 
     @Autowired
@@ -65,6 +69,18 @@ class MongoDBUserDaoTest {
         this.userDao.deleteByEmail(this.userEntity1.getEmail());
 
         assertThat(this.userDao.findByEmail(this.userEntity1.getEmail())).isEmpty();
+    }
+
+    @Test
+    @DisplayName("중복 이메일 가입 테스트")
+    public void duplicateEmailException() {
+        this.userDao.insert(this.userEntity1);
+
+        assertThrows(DuplicateEmailException.class, () -> {
+            this.userDao.insert(UserEntity.builder()
+                    .email("kimyoungi99@naver9.com")
+                    .build());
+        });
     }
 
     private void checkSameUserEntity(UserEntity userEntity1, UserEntity userEntity2) {

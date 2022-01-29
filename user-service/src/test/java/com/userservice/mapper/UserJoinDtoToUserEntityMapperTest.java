@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class UserJoinDtoToUserEntityMapperTest {
 
     @Test
-    @DisplayName("WrongDataFormatException 테스트")
+    @DisplayName("날짜 형식 오류 테스트")
     public void wrongDataFormatExceptionTest() {
         assertThrows(WrongDateFormatException.class, () -> {
             UserJoinDtoToUserEntityMapper.map(UserJoinDto.builder()

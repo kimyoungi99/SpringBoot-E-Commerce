@@ -99,7 +99,7 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("UserNotExistingException 테스트")
+    @DisplayName("유저 존재 하지 않는 경우 테스트")
     public void infoUserNotExistingExceptionTest() {
         Mockito.when(this.userDao.findByEmail("")).thenReturn(Optional.ofNullable(null));
 
@@ -109,7 +109,7 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("WrongDataFormatException 테스트")
+    @DisplayName("생일 날짜 형식 오류 테스트")
     public void wrongDataFormatExceptionTest() {
         UserJoinDto wrongUserJoinDto = UserJoinDto.builder()
                 .email("asdf99@naver.com")

@@ -1,16 +1,20 @@
 package com.userservice.dao;
 
+import com.mongodb.MongoWriteException;
 import com.userservice.domain.UserEntity;
 import com.userservice.exception.DataResponseException;
+import com.userservice.exception.DuplicateEmailException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
 
 @Slf4j
+@Component
 public class MongoDBUserDao implements UserDao {
 
     private final MongoTemplate mongoTemplate;
@@ -34,7 +38,18 @@ public class MongoDBUserDao implements UserDao {
 
     @Override
     public String insert(UserEntity userEntity) {
-        mongoTemplate.insert(userEntity);
+        try {
+            mongoTemplate.insert(userEntity);
+        } catch (Exception e) {
+            // 리펙토링 필요
+            if(e.getClass().getSimpleName().equals("DuplicateKeyException")) {
+                log.error("name: " + e.getClass().getSimpleName() + "\nmsg :" + e.getMessage());
+                throw new DuplicateEmailException("이메일 중복 오류.");
+            }
+
+            throw e;
+        }
+
         return userEntity.getEmail();
     }
 
