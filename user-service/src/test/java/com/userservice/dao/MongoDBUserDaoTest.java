@@ -19,9 +19,10 @@ class MongoDBUserDaoTest {
     @Autowired
     MongoTemplate mongoTemplate;
 
-    MongoDBUserDao userDao = null;
+    MongoDBUserDao userDao;
 
-    UserEntity userEntity1 = null;
+    // test data
+    UserEntity userEntity1;
 
     @BeforeEach
     public void init() {
@@ -42,7 +43,7 @@ class MongoDBUserDaoTest {
     }
 
     @Test
-    @DisplayName("유저 저장 & 이메일로 조회 테스트")
+    @DisplayName("MongoDB 유저 저장 & 이메일로 조회 테스트")
     public void insertAndFindByEmailTest() {
 
         this.userDao.insert(this.userEntity1);
@@ -52,7 +53,7 @@ class MongoDBUserDaoTest {
     }
 
     @Test
-    @DisplayName("유저 삭제 테스트")
+    @DisplayName("MongoDB 유저 삭제 테스트")
     public void deleteTest() {
 
         this.userDao.insert(this.userEntity1);
@@ -68,6 +69,5 @@ class MongoDBUserDaoTest {
         assertThat(userEntity1.getBirthdate()).isEqualTo(userEntity2.getBirthdate());
         assertThat(userEntity1.getPoint()).isEqualTo(userEntity2.getPoint());
         assertThat(userEntity1.getCreatedDate()).isEqualTo(userEntity2.getCreatedDate());
-
     }
 }

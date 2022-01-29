@@ -6,11 +6,8 @@ import lombok.Getter;
 import java.util.Date;
 
 @Getter
-public class UserDto {
-
+public class UserResponseDto {
     private String email;
-
-    private String password;
 
     private String address;
 
@@ -21,9 +18,8 @@ public class UserDto {
     private Date createdDate;
 
     @Builder
-    public UserDto(String email, String password, String address, String birthdate, Long point, Date createdDate) {
+    public UserResponseDto(String email, String address, String birthdate, Long point, Date createdDate) {
         this.email = email;
-        this.password = password;
         this.address = address;
         this.birthdate = birthdate;
         this.point = point;

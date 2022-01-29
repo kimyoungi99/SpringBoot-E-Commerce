@@ -1,6 +1,6 @@
 package com.userservice.domain;
 
-import com.userservice.dto.UserDto;
+import com.userservice.dto.UserResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.annotation.Id;
@@ -37,10 +37,13 @@ public class UserEntity {
         this.createdDate = createdDate;
     }
 
-    public UserDto toDto() {
-        return UserDto.builder()
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public UserResponseDto toResponseDto() {
+        return UserResponseDto.builder()
                 .email(email)
-                .password(password)
                 .address(address)
                 .birthdate(birthdate)
                 .point(point)
