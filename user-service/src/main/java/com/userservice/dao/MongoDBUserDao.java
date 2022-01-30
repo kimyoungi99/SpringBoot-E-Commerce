@@ -3,6 +3,7 @@ package com.userservice.dao;
 import com.mongodb.MongoWriteException;
 import com.userservice.domain.UserEntity;
 import com.userservice.exception.DataResponseException;
+import com.userservice.exception.DatabaseConnectionException;
 import com.userservice.exception.DuplicateEmailException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -55,7 +56,12 @@ public class MongoDBUserDao implements UserDao {
 
     @Override
     public void deleteByEmail(String email) {
-        mongoTemplate.remove(new Query(Criteria.where("email").is(email)), UserEntity.class);
+        try {
+            mongoTemplate.remove(new Query(Criteria.where("email").is(email)), UserEntity.class);
+        } catch (Exception e) {
+            log.error("name: " + e.getClass().getSimpleName() + "\nmsg :" + e.getMessage());
+            throw new DatabaseConnectionException("데이터베이스 응답 오류.");
+        }
     }
 
     public MongoDBUserDao(MongoTemplate mongoTemplate) {

@@ -37,7 +37,8 @@ public class MongoDBProductDao implements ProductDao {
         try {
             mongoTemplate.insert(productEntity);
         } catch (Exception e) {
-            throw new DatabaseConnectionException("데이터 베이스 연결 오류.");
+            log.error("name: " + e.getClass().getSimpleName() + "\nmsg :" + e.getMessage());
+            throw new DatabaseConnectionException("데이터베이스 연결 오류.");
         }
 
         return productEntity.getId();
@@ -48,7 +49,8 @@ public class MongoDBProductDao implements ProductDao {
         try {
             mongoTemplate.remove(new Query(Criteria.where("id").is(id)), ProductEntity.class);
         } catch (Exception e) {
-            throw new DatabaseConnectionException("데이터 베이스 연결 오류.");
+            log.error("name: " + e.getClass().getSimpleName() + "\nmsg :" + e.getMessage());
+            throw new DatabaseConnectionException("데이터베이스 연결 오류.");
         }
 
         return id;

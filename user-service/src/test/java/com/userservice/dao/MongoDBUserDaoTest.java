@@ -2,12 +2,15 @@ package com.userservice.dao;
 
 import com.userservice.common.config.MongoDBConfig;
 import com.userservice.domain.UserEntity;
+import com.userservice.exception.DataResponseException;
+import com.userservice.exception.DatabaseConnectionException;
 import com.userservice.exception.DuplicateEmailException;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.SimpleMongoClientDatabaseFactory;
 import org.springframework.test.context.TestPropertySource;
 
 import java.time.LocalDate;
@@ -19,13 +22,15 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DataMongoTest
 @Import(MongoDBConfig.class)
-@TestPropertySource(locations="/application.properties")
+@TestPropertySource(locations = "/application.properties")
 class MongoDBUserDaoTest {
 
     @Autowired
     MongoTemplate mongoTemplate;
 
     MongoDBUserDao userDao;
+
+    MongoDBUserDao wrongUserDao;
 
     // test data
     UserEntity userEntity1;
@@ -44,6 +49,11 @@ class MongoDBUserDaoTest {
                 .point(0L)
                 .createdDate(new Date())
                 .build();
+        this.wrongUserDao = new MongoDBUserDao(
+                new MongoTemplate(
+                        new SimpleMongoClientDatabaseFactory("mongodb://192.168.12.12:9903/product")
+                )
+        );
     }
 
     @AfterEach
@@ -80,6 +90,24 @@ class MongoDBUserDaoTest {
             this.userDao.insert(UserEntity.builder()
                     .email("kimyoungi99@naver9.com")
                     .build());
+        });
+    }
+
+    @Test
+    @Disabled
+    @DisplayName("데이터 베이스 연결 오류 테스트")
+    public void databaseConnectionExceptionTest() {
+        assertThrows(DatabaseConnectionException.class, () -> {
+            this.wrongUserDao.deleteByEmail("asdf");
+        });
+    }
+
+    @Test
+    @Disabled
+    @DisplayName("데이터 응답 오류 테스트")
+    public void dataResponseExceptionTest() {
+        assertThrows(DataResponseException.class, () -> {
+            this.wrongUserDao.findByEmail("asdf");
         });
     }
 

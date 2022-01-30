@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DataMongoTest
 @Import(MongoDBConfig.class)
-@TestPropertySource(locations="/application.properties")
+@TestPropertySource(locations = "/application.properties")
 class MongoDBProductDaoTest {
 
     @Autowired
@@ -80,7 +80,7 @@ class MongoDBProductDaoTest {
     @DisplayName("데이터 베이스 연결 오류 테스트")
     public void databaseConnectionExceptionTest() {
         assertThrows(DatabaseConnectionException.class, () -> {
-          wrongProductDao.deleteById("asdf");
+            this.wrongProductDao.deleteById("asdf");
         });
     }
 
@@ -89,7 +89,7 @@ class MongoDBProductDaoTest {
     @DisplayName("데이터 응답 오류 테스트")
     public void dataResponseExceptionTest() {
         assertThrows(DataResponseException.class, () -> {
-            wrongProductDao.findById("asdf");
+            this.wrongProductDao.findById("asdf");
         });
     }
 
