@@ -7,10 +7,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
 @Slf4j
+@Component
 public class MongoDBProductDao implements ProductDao {
 
     private final MongoTemplate mongoTemplate;
