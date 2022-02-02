@@ -95,10 +95,10 @@ class UserControllerTest {
 
         ResponseEntity<ResponseDto> response = this.userController.info(this.userEntity1.getEmail());
 
-        CheckSameUserResponseDto((UserResponseDto) response.getBody().getData(), this.userEntity1.toResponseDto());
+        checkSameUserResponseDto((UserResponseDto) response.getBody().getData(), this.userEntity1.toResponseDto());
     }
 
-    private void CheckSameUserResponseDto(UserResponseDto userResponseDto1, UserResponseDto userResponseDto2) {
+    private void checkSameUserResponseDto(UserResponseDto userResponseDto1, UserResponseDto userResponseDto2) {
         assertThat(userResponseDto1.getId()).isEqualTo(userResponseDto2.getId());
         assertThat(userResponseDto1.getEmail()).isEqualTo(userResponseDto2.getEmail());
         assertThat(userResponseDto1.getAddress()).isEqualTo(userResponseDto2.getAddress());

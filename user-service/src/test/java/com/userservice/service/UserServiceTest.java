@@ -95,7 +95,7 @@ class UserServiceTest {
 
         UserResponseDto userResponseDto = this.userService.info(this.userEntity1.getEmail());
 
-        CheckSameUserResponseDto(userResponseDto, this.userEntity1.toResponseDto());
+        checkSameUserResponseDto(userResponseDto, this.userEntity1.toResponseDto());
     }
 
     @Test
@@ -121,7 +121,7 @@ class UserServiceTest {
         });
     }
 
-    private void CheckSameUserResponseDto(UserResponseDto userResponseDto1, UserResponseDto userResponseDto2) {
+    private void checkSameUserResponseDto(UserResponseDto userResponseDto1, UserResponseDto userResponseDto2) {
         assertThat(userResponseDto1.getId()).isEqualTo(userResponseDto2.getId());
         assertThat(userResponseDto1.getEmail()).isEqualTo(userResponseDto2.getEmail());
         assertThat(userResponseDto1.getAddress()).isEqualTo(userResponseDto2.getAddress());
