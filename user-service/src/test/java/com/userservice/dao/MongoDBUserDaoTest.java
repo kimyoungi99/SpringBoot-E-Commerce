@@ -58,7 +58,7 @@ class MongoDBUserDaoTest {
 
     @AfterEach
     public void after() {
-        this.userDao.deleteByEmail(this.userEntity1.getEmail());
+        this.userDao.deleteById(this.userEntity1.getId());
     }
 
     @Test
@@ -72,6 +72,16 @@ class MongoDBUserDaoTest {
     }
 
     @Test
+    @DisplayName("유저 저장 & id로 조회 테스트")
+    public void insertAndFindByIdTest() {
+
+        this.userDao.insert(this.userEntity1);
+        UserEntity userEntity = this.userDao.findById(this.userEntity1.getId()).get();
+
+        checkSameUserEntity(this.userEntity1, userEntity);
+    }
+
+    @Test
     @DisplayName("유저 삭제 테스트")
     public void deleteTest() {
 
@@ -79,6 +89,29 @@ class MongoDBUserDaoTest {
         this.userDao.deleteByEmail(this.userEntity1.getEmail());
 
         assertThat(this.userDao.findByEmail(this.userEntity1.getEmail())).isEmpty();
+    }
+
+    @Test
+    @DisplayName("유저 수정 테스트")
+    public void updateTest() {
+        this.userDao.insert(this.userEntity1);
+        UserEntity update = UserEntity.builder()
+                .id(this.userEntity1.getId())
+                .email("yk0318ha@naver9.com")
+                .password("Asdfasdf")
+                .address("busan, korea")
+                .birthdate(LocalDate.parse(
+                        "1969-05-18",
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                ))
+                .point(123L)
+                .createdDate(this.userEntity1.getCreatedDate())
+                .build();
+
+        this.userDao.update(update);
+        UserEntity userEntity = this.userDao.findById(this.userEntity1.getId()).get();
+
+        checkSameUserEntity(userEntity, update);
     }
 
     @Test

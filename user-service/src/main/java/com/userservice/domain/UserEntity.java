@@ -33,7 +33,8 @@ public class UserEntity {
     private Date createdDate;
 
     @Builder
-    public UserEntity(String email, String password, String address, LocalDate birthdate, Long point, Date createdDate) {
+    public UserEntity(String id, String email, String password, String address, LocalDate birthdate, Long point, Date createdDate) {
+        this.id = id;
         this.email = email;
         this.password = password;
         this.address = address;
@@ -44,6 +45,10 @@ public class UserEntity {
 
     public UserEntity() {
 
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public void setCreatedDate(Date createdDate) {

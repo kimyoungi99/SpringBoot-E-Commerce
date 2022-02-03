@@ -1,9 +1,6 @@
 package com.userservice.controller;
 
-import com.userservice.dto.ResponseDto;
-import com.userservice.dto.UserDeleteDto;
-import com.userservice.dto.UserJoinDto;
-import com.userservice.dto.UserResponseDto;
+import com.userservice.dto.*;
 import com.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -53,6 +50,18 @@ public class UserController {
                         .message("ok")
                         .dateTime(LocalDateTime.now())
                         .data(info)
+                        .build());
+    }
+
+    @PostMapping(value = "/update")
+    public ResponseEntity<ResponseDto> update(@RequestBody UserUpdateDto userUpdateDto) {
+        this.userService.update(userUpdateDto);
+
+        return ResponseEntity.ok()
+                .body(ResponseDto.builder()
+                        .status(HttpStatus.OK)
+                        .message("ok")
+                        .dateTime(LocalDateTime.now())
                         .build());
     }
 }
