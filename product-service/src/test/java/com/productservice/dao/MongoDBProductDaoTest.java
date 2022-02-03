@@ -76,6 +76,43 @@ class MongoDBProductDaoTest {
     }
 
     @Test
+    @DisplayName("싱품 수정 테스트")
+    public void updateTest() {
+        this.productDao.insert(this.productEntity1);
+        ProductEntity update = ProductEntity.builder()
+                .id(this.productEntity1.getId())
+                .sellerEmail("sadf.asdf")
+                .sellerId("123123")
+                .stock(100L)
+                .totalSales(100L)
+                .price(1231230L)
+                .name("hello")
+                .categoryId("Asdfasdf")
+                .categoryName("aaaa")
+                .createdDate(this.productEntity1.getCreatedDate())
+                .build();
+
+        this.productDao.update(update);
+        ProductEntity productEntity = this.productDao.findById(update.getId()).get();
+
+        checkSameProductEntity(productEntity, update);
+    }
+
+    @Test
+    @DisplayName("판매자 이메일 수정 테스트")
+    public void updateSellerEmailTest() {
+        this.productDao.insert(this.productEntity1);
+        String newEmail = "SAfd.asdf";
+
+        this.productDao.updateSellerEmail(this.productEntity1.getSellerId(), newEmail);
+
+        this.productEntity1.setSellerEmail(newEmail);
+        ProductEntity productEntity = this.productDao.findById(this.productEntity1.getId()).get();
+
+        checkSameProductEntity(this.productEntity1, productEntity);
+    }
+
+    @Test
     @Disabled
     @DisplayName("데이터 베이스 연결 오류 테스트")
     public void databaseConnectionExceptionTest() {

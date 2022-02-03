@@ -1,4 +1,4 @@
-package com.userservice.dto;
+package com.productservice.dto;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -16,5 +16,8 @@ public class KafkaMessageDto {
         this.domain = domain;
         this.eventType = eventType;
         this.data = data;
+    }
+
+    public KafkaMessageDto() {
     }
 }

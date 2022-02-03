@@ -10,5 +10,9 @@ public interface ProductDao {
 
     String insert(ProductEntity productEntity);
 
+    void update(ProductEntity productEntity);
+
+    void updateSellerEmail(String sellerId, String sellerEmail);
+
     String deleteById(String id);
 }

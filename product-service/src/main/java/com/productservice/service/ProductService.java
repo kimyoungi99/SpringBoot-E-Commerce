@@ -2,6 +2,7 @@ package com.productservice.service;
 
 import com.productservice.dao.ProductDao;
 import com.productservice.domain.ProductEntity;
+import com.productservice.dto.EmailUpdateDto;
 import com.productservice.dto.ProductAddDto;
 import com.productservice.dto.ProductDeleteDto;
 import com.productservice.dto.ProductResponseDto;
@@ -42,5 +43,9 @@ public class ProductService {
                 );
 
         return productEntity.toResponseDto();
+    }
+
+    public void updateSellerEmail(EmailUpdateDto emailUpdateDto) {
+        this.productDao.updateSellerEmail(emailUpdateDto.getId(), emailUpdateDto.getEmail());
     }
 }

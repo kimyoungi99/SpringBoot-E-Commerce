@@ -2,6 +2,7 @@ package com.productservice.service;
 
 import com.productservice.dao.ProductDao;
 import com.productservice.domain.ProductEntity;
+import com.productservice.dto.EmailUpdateDto;
 import com.productservice.dto.ProductAddDto;
 import com.productservice.dto.ProductDeleteDto;
 import com.productservice.dto.ProductResponseDto;
@@ -91,6 +92,26 @@ class ProductServiceTest {
         ProductResponseDto productResponseDto = this.productService.info(targetId);
 
         checkSameProductResponseDto(productResponseDto, this.productEntity1.toResponseDto());
+    }
+
+    @Test
+    @DisplayName("이메일 수정 테스트")
+    void emailUpdateTest() {
+        ArgumentCaptor<String> idStringArgumentCaptor
+                = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<String> emailStringArgumentCaptor
+                = ArgumentCaptor.forClass(String.class);
+        EmailUpdateDto emailUpdateDto = EmailUpdateDto.builder()
+                .id("ASdf")
+                .email("ASdf")
+                .build();
+
+
+        this.productService.updateSellerEmail(emailUpdateDto);
+        Mockito.verify(this.productDao).updateSellerEmail(idStringArgumentCaptor.capture(), emailStringArgumentCaptor.capture());
+
+        assertThat(emailUpdateDto.getEmail()).isEqualTo(emailStringArgumentCaptor.getValue());
+        assertThat(emailUpdateDto.getId()).isEqualTo(idStringArgumentCaptor.getValue());
     }
 
     private void checkSameProductEntityWithoutCreatedTime(ProductEntity productEntity1, ProductEntity productEntity2) {
