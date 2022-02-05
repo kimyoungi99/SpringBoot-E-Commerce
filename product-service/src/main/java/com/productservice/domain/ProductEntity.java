@@ -60,6 +60,10 @@ public class ProductEntity {
         this.sellerEmail = sellerEmail;
     }
 
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
     public ProductResponseDto toResponseDto() {
         return ProductResponseDto.builder()
                 .sellerId(this.sellerId)

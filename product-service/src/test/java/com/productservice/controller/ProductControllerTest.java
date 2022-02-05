@@ -1,11 +1,9 @@
 package com.productservice.controller;
 
+import com.productservice.client.CategoryServiceClient;
 import com.productservice.dao.ProductDao;
 import com.productservice.domain.ProductEntity;
-import com.productservice.dto.ProductAddDto;
-import com.productservice.dto.ProductDeleteDto;
-import com.productservice.dto.ProductResponseDto;
-import com.productservice.dto.ResponseDto;
+import com.productservice.dto.*;
 import com.productservice.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,7 +14,11 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
 
+import java.util.AbstractMap;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -24,6 +26,9 @@ class ProductControllerTest {
 
     @Mock
     private ProductDao productDao;
+
+    @Mock
+    private CategoryServiceClient categoryServiceClient;
 
     private ProductController productController;
 
@@ -43,7 +48,7 @@ class ProductControllerTest {
                 .sellerEmail("qaxwscedv")
                 .build();
         MockitoAnnotations.openMocks(this);
-        this.productController = new ProductController(new ProductService(this.productDao));
+        this.productController = new ProductController(new ProductService(this.productDao, this.categoryServiceClient));
     }
 
     @Test
@@ -51,9 +56,20 @@ class ProductControllerTest {
     void addTest() {
         ArgumentCaptor<ProductEntity> productEntityArgumentCaptor
                 = ArgumentCaptor.forClass(ProductEntity.class);
+        Mockito.when(this.categoryServiceClient.info(this.productEntity1.getCategoryId()))
+                .thenReturn(Stream.of(
+                                new AbstractMap.SimpleImmutableEntry<>("name", this.productEntity1.getName()),
+                                new AbstractMap.SimpleImmutableEntry<>("status", "OK"),
+                                new AbstractMap.SimpleImmutableEntry<>("dateTime", "2022-02-05T21:38:29.807704"),
+                                new AbstractMap.SimpleImmutableEntry<>("message", "OK"),
+                                new AbstractMap.SimpleImmutableEntry<>("data", Stream.of(
+                                        new AbstractMap.SimpleImmutableEntry<>("name", this.productEntity1.getName())
+                                ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
+                                )
+                        ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
+                );
 
         this.productController.add(ProductAddDto.builder()
-                .categoryName("asdf")
                 .categoryId("asdf")
                 .name("Asdf")
                 .price(1L)

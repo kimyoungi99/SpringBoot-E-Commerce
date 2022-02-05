@@ -13,7 +13,6 @@ public class ProductAddDtoToProductEntityMapper {
                 .stock(productAddDto.getStock())
                 .price(productAddDto.getPrice())
                 .categoryId(productAddDto.getCategoryId())
-                .categoryName(productAddDto.getCategoryName())
                 .build();
     }
 }

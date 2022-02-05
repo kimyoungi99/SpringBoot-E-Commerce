@@ -18,16 +18,13 @@ public class ProductAddDto {
 
     private String categoryId;
 
-    private String categoryName;
-
     @Builder
-    public ProductAddDto(String sellerId, String sellerEmail, String name, Long stock, Long price, String categoryId, String categoryName) {
+    public ProductAddDto(String sellerId, String sellerEmail, String name, Long stock, Long price, String categoryId) {
         this.sellerId = sellerId;
         this.sellerEmail = sellerEmail;
         this.name = name;
         this.stock = stock;
         this.price = price;
         this.categoryId = categoryId;
-        this.categoryName = categoryName;
     }
 }
