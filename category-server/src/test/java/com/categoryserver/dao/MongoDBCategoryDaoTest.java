@@ -34,6 +34,7 @@ class MongoDBCategoryDaoTest {
         this.categoryDao = new MongoDBCategoryDao(this.mongoTemplate);
         this.categoryEntity1 = CategoryEntity.builder()
                 .name("electronics")
+                .count(0L)
                 .build();
         this.wrongCategoryDao = new MongoDBCategoryDao(
                 new MongoTemplate(

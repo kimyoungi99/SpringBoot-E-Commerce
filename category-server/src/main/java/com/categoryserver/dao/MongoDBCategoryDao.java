@@ -9,13 +9,14 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
 
 @Slf4j
-@RequiredArgsConstructor
-public class MongoDBCategoryDao implements CategoryId{
+@Component
+public class MongoDBCategoryDao implements CategoryDao {
 
     private final MongoTemplate mongoTemplate;
 
@@ -89,5 +90,9 @@ public class MongoDBCategoryDao implements CategoryId{
         }
 
         return id;
+    }
+
+    public MongoDBCategoryDao(MongoTemplate mongoTemplate) {
+        this.mongoTemplate = mongoTemplate;
     }
 }

@@ -5,7 +5,7 @@ import com.categoryserver.domain.CategoryEntity;
 import java.util.List;
 import java.util.Optional;
 
-public interface CategoryId {
+public interface CategoryDao {
 
     Optional<CategoryEntity> findById(String id);
 
