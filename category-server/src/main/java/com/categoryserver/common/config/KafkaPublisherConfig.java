@@ -20,7 +20,7 @@ public class KafkaPublisherConfig {
     @Value(value = "${spring.kafka.bootstrap-servers}")
     private String bootstrap;
 
-    @Value(value = "${topic.user.update.name}")
+    @Value(value = "${topic.category.update.name}")
     private String userUpdateTopicName;
 
     @Bean

@@ -113,6 +113,20 @@ class MongoDBProductDaoTest {
     }
 
     @Test
+    @DisplayName("카테고리 이름 수정 테스트")
+    public void updateCategoryNameTest() {
+        this.productDao.insert(this.productEntity1);
+        String newCategory = "asdfasdfasdf";
+
+        this.productDao.updateCategoryName(this.productEntity1.getCategoryId(), newCategory);
+
+        this.productEntity1.setCategoryName(newCategory);
+        ProductEntity productEntity = this.productDao.findById(this.productEntity1.getId()).get();
+
+        checkSameProductEntity(this.productEntity1, productEntity);
+    }
+
+    @Test
     @Disabled
     @DisplayName("데이터 베이스 연결 오류 테스트")
     public void databaseConnectionExceptionTest() {

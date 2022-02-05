@@ -112,7 +112,7 @@ class ProductServiceTest {
     }
 
     @Test
-    @DisplayName("이메일 수정 테스트")
+    @DisplayName("판매자 이메일 수정 테스트")
     void emailUpdateTest() {
         ArgumentCaptor<String> idStringArgumentCaptor
                 = ArgumentCaptor.forClass(String.class);
@@ -129,6 +129,26 @@ class ProductServiceTest {
 
         assertThat(emailUpdateDto.getEmail()).isEqualTo(emailStringArgumentCaptor.getValue());
         assertThat(emailUpdateDto.getId()).isEqualTo(idStringArgumentCaptor.getValue());
+    }
+
+    @Test
+    @DisplayName("카테고리 이름 수정 테스트")
+    void categoryNameUpdateTest() {
+        ArgumentCaptor<String> categoryIdStringArgumentCaptor
+                = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<String> categoryNameStringArgumentCaptor
+                = ArgumentCaptor.forClass(String.class);
+        CategoryUpdateDto categoryUpdateDto = CategoryUpdateDto.builder()
+                .id(this.productEntity1.getCategoryId())
+                .name(this.productEntity1.getCategoryName())
+                .build();
+
+
+        this.productService.updateCategoryName(categoryUpdateDto);
+        Mockito.verify(this.productDao).updateCategoryName(categoryIdStringArgumentCaptor.capture(), categoryNameStringArgumentCaptor.capture());
+
+        assertThat(this.productEntity1.getCategoryId()).isEqualTo(categoryIdStringArgumentCaptor.getValue());
+        assertThat(this.productEntity1.getCategoryName()).isEqualTo(categoryNameStringArgumentCaptor.getValue());
     }
 
     private void checkSameProductEntityWithoutCreatedTime(ProductEntity productEntity1, ProductEntity productEntity2) {

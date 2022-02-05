@@ -14,5 +14,7 @@ public interface ProductDao {
 
     void updateSellerEmail(String sellerId, String sellerEmail);
 
+    void updateCategoryName(String categoryId, String categoryName);
+
     String deleteById(String id);
 }

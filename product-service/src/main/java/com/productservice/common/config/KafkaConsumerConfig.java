@@ -26,6 +26,9 @@ public class KafkaConsumerConfig {
     @Value(value = "${topic.user.update.name}")
     private String userUpdateTopicName;
 
+    @Value(value = "${topic.category.update.name}")
+    private String categoryUpdateTopicName;
+
     public ConsumerFactory<String, KafkaMessageDto> kafkaConsumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, this.bootstrap);
@@ -52,7 +55,12 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public String UserUpdateTopicName() {
+    public String userUpdateTopicName() {
         return this.userUpdateTopicName;
+    }
+
+    @Bean
+    public String categoryUpdateTopicName() {
+        return this.categoryUpdateTopicName;
     }
 }

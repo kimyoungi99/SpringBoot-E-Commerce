@@ -55,4 +55,8 @@ public class ProductService {
     public void updateSellerEmail(EmailUpdateDto emailUpdateDto) {
         this.productDao.updateSellerEmail(emailUpdateDto.getId(), emailUpdateDto.getEmail());
     }
+
+    public void updateCategoryName(CategoryUpdateDto categoryUpdateDto) {
+        this.productDao.updateCategoryName(categoryUpdateDto.getId(), categoryUpdateDto.getName());
+    }
 }
