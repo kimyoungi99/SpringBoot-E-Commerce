@@ -2,6 +2,7 @@ package com.categoryserver.controller;
 
 import com.categoryserver.dto.CategoryAddDto;
 import com.categoryserver.dto.CategoryResponseDto;
+import com.categoryserver.dto.CategoryUpdateDto;
 import com.categoryserver.dto.ResponseDto;
 import com.categoryserver.service.CategoryService;
 import lombok.RequiredArgsConstructor;
@@ -58,5 +59,17 @@ public class CategoryController {
                         .data(info)
                         .build()
                 );
+    }
+
+    @PostMapping(value = "/update")
+    public ResponseEntity<ResponseDto> update(@RequestBody CategoryUpdateDto categoryUpdateDto) {
+        this.categoryService.update(categoryUpdateDto);
+
+        return ResponseEntity.ok()
+                .body(ResponseDto.builder()
+                        .status(HttpStatus.OK)
+                        .message("ok")
+                        .dateTime(LocalDateTime.now())
+                        .build());
     }
 }

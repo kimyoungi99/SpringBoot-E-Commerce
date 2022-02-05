@@ -4,6 +4,8 @@ import com.categoryserver.dao.CategoryDao;
 import com.categoryserver.domain.CategoryEntity;
 import com.categoryserver.dto.CategoryAddDto;
 import com.categoryserver.dto.CategoryResponseDto;
+import com.categoryserver.dto.CategoryUpdateDto;
+import com.categoryserver.dto.KafkaMessageDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.kafka.core.KafkaTemplate;
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,10 +29,14 @@ class CategoryServiceTest {
     @Mock
     private CategoryDao categoryDao;
 
+    @Mock
+    private KafkaTemplate<String, KafkaMessageDto> kafkaTemplate;
+
     private CategoryService categoryService;
 
     // Test Data
     private CategoryEntity categoryEntity1;
+    private String kafkaTopicName = "asdf";
 
     @BeforeEach
     public void init() {
@@ -39,7 +46,7 @@ class CategoryServiceTest {
                 .build();
 
         MockitoAnnotations.openMocks(this);
-        this.categoryService = new CategoryService(this.categoryDao);
+        this.categoryService = new CategoryService(this.kafkaTemplate, this.categoryDao, this.kafkaTopicName);
     }
 
     @Test
@@ -77,6 +84,37 @@ class CategoryServiceTest {
         List<CategoryResponseDto> all = this.categoryService.getAll();
 
         checkSameCategoryResponseDto(all.get(0), this.categoryEntity1.toResponseDto());
+    }
+
+    @Test
+    @DisplayName("update 테스트")
+    public void updateTest() {
+        Mockito.when(this.categoryDao.findById(this.categoryEntity1.getId()))
+                .thenReturn(Optional.ofNullable(this.categoryEntity1));
+        ArgumentCaptor<KafkaMessageDto> kafkaMessageDtoArgumentCaptor
+                = ArgumentCaptor.forClass(KafkaMessageDto.class);
+        ArgumentCaptor<CategoryEntity> categoryEntityArgumentCaptor
+                = ArgumentCaptor.forClass(CategoryEntity.class);
+        ArgumentCaptor<String> stringArgumentCaptor
+                = ArgumentCaptor.forClass(String.class);
+        CategoryUpdateDto categoryUpdateDto = CategoryUpdateDto.builder()
+                .id(this.categoryEntity1.getId())
+                .name("akmu")
+                .build();
+
+
+        this.categoryService.update(categoryUpdateDto);
+
+        Mockito.verify(this.categoryDao).update(categoryEntityArgumentCaptor.capture());
+        Mockito.verify(this.kafkaTemplate).send(stringArgumentCaptor.capture(), kafkaMessageDtoArgumentCaptor.capture());
+
+        assertThat(categoryUpdateDto.getId()).isEqualTo(categoryEntityArgumentCaptor.getValue().getId());
+        assertThat(categoryUpdateDto.getName()).isEqualTo(categoryEntityArgumentCaptor.getValue().getName());
+
+        assertThat(this.kafkaTopicName).isEqualTo(stringArgumentCaptor.getValue());
+        assertThat(categoryUpdateDto.getName()).isEqualTo(
+                ((CategoryUpdateDto) kafkaMessageDtoArgumentCaptor.getValue().getData()).getName()
+        );
     }
 
     private void checkSameCategoryEntity(CategoryEntity categoryEntity1, CategoryEntity categoryEntity2) {
