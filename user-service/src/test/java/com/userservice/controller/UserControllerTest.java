@@ -133,6 +133,16 @@ class UserControllerTest {
         );
     }
 
+    @Test
+    @DisplayName("getEmail 테스트")
+    public void getEmailTest() {
+        Mockito.when(this.userDao.findById(this.userEntity1.getId())).thenReturn(Optional.ofNullable(this.userEntity1));
+
+        ResponseEntity<ResponseDto> response = this.userController.getEmail(this.userEntity1.getId());
+
+        assertThat(((EmailResponseDto) response.getBody().getData()).getEmail()).isEqualTo(this.userEntity1.getEmail());
+    }
+
     private void checkSameUserResponseDto(UserResponseDto userResponseDto1, UserResponseDto userResponseDto2) {
         assertThat(userResponseDto1.getId()).isEqualTo(userResponseDto2.getId());
         assertThat(userResponseDto1.getEmail()).isEqualTo(userResponseDto2.getEmail());

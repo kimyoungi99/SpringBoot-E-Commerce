@@ -125,6 +125,16 @@ class UserServiceTest {
     }
 
     @Test
+    @DisplayName("getEmail 테스트")
+    public void getEmailTest() {
+        Mockito.when(this.userDao.findById(this.userEntity1.getId())).thenReturn(Optional.ofNullable(this.userEntity1));
+
+        EmailResponseDto emailResponseDto = this.userService.getEmail(this.userEntity1.getId());
+
+        assertThat(emailResponseDto.getEmail()).isEqualTo(this.userEntity1.getEmail());
+    }
+
+    @Test
     @DisplayName("update 테스트")
     public void updateTest() {
         String userId = "asdf";

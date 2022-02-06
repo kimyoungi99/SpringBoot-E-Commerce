@@ -1,6 +1,7 @@
 package com.productservice.service;
 
 import com.productservice.client.CategoryServiceClient;
+import com.productservice.client.UserServiceClient;
 import com.productservice.dao.ProductDao;
 import com.productservice.domain.ProductEntity;
 import com.productservice.dto.*;
@@ -33,13 +34,16 @@ class ProductServiceTest {
     private CategoryServiceClient categoryServiceClient;
 
     @Mock
+    private UserServiceClient userServiceClient;
+
+    @Mock
     private KafkaTemplate<String, KafkaMessageDto> kafkaTemplate;
 
     private ProductService productService;
 
     // Test Data
     private ProductEntity productEntity1;
-    private String ProductAddDeleteTopicName = "asdfadddelete";
+    private String productAddDeleteTopicName = "asdfadddelete";
 
     @BeforeEach
     public void init() {
@@ -54,7 +58,13 @@ class ProductServiceTest {
                 .sellerEmail("qaxwscedv")
                 .build();
         MockitoAnnotations.openMocks(this);
-        this.productService = new ProductService(this.kafkaTemplate, this.productDao, this.categoryServiceClient, this.ProductAddDeleteTopicName);
+        this.productService = ProductService.builder()
+                .categoryServiceClient(this.categoryServiceClient)
+                .kafkaTemplate(this.kafkaTemplate)
+                .productDao(this.productDao)
+                .productAddDeleteTopicName(this.productAddDeleteTopicName)
+                .userServiceClient(this.userServiceClient)
+                .build();
     }
 
     @Test
@@ -69,7 +79,6 @@ class ProductServiceTest {
 
         Mockito.when(this.categoryServiceClient.info(this.productEntity1.getCategoryId()))
                 .thenReturn(Stream.of(
-                                new AbstractMap.SimpleImmutableEntry<>("name", this.productEntity1.getName()),
                                 new AbstractMap.SimpleImmutableEntry<>("status", "OK"),
                                 new AbstractMap.SimpleImmutableEntry<>("dateTime", "2022-02-05T21:38:29.807704"),
                                 new AbstractMap.SimpleImmutableEntry<>("message", "OK"),
@@ -79,21 +88,31 @@ class ProductServiceTest {
                                 )
                         ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
                 );
+        Mockito.when(this.userServiceClient.getEmail(this.productEntity1.getSellerId()))
+                .thenReturn(Stream.of(
+                                new AbstractMap.SimpleImmutableEntry<>("status", "OK"),
+                                new AbstractMap.SimpleImmutableEntry<>("dateTime", "2022-02-05T21:38:29.807704"),
+                                new AbstractMap.SimpleImmutableEntry<>("message", "OK"),
+                                new AbstractMap.SimpleImmutableEntry<>("data", Stream.of(
+                                        new AbstractMap.SimpleImmutableEntry<>("email", this.productEntity1.getSellerEmail())
+                                ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
+                                )
+                        ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
+                );
 
         this.productService.insert(ProductAddDto.builder()
-                .categoryId("asdf")
-                .name("Asdf")
-                .price(1L)
-                .stock(10L)
-                .sellerId("sadf")
-                .sellerEmail("qaxwscedv")
+                .categoryId(this.productEntity1.getCategoryId())
+                .name(this.productEntity1.getName())
+                .price(this.productEntity1.getPrice())
+                .stock(this.productEntity1.getStock())
+                .sellerId(this.productEntity1.getSellerId())
                 .build()
         );
         Mockito.verify(this.productDao).insert(productEntityArgumentCaptor.capture());
         Mockito.verify(this.kafkaTemplate).send(stringArgumentCaptor.capture(), kafkaMessageDtoArgumentCaptor.capture());
 
         checkSameProductEntityWithoutCreatedTime(this.productEntity1, productEntityArgumentCaptor.getValue());
-        assertThat(this.ProductAddDeleteTopicName).isEqualTo(stringArgumentCaptor.getValue());
+        assertThat(this.productAddDeleteTopicName).isEqualTo(stringArgumentCaptor.getValue());
         assertThat(kafkaMessageDtoArgumentCaptor.getValue().getEventType()).isEqualTo("ProductAddEvent");
     }
 
@@ -115,7 +134,7 @@ class ProductServiceTest {
         Mockito.verify(this.kafkaTemplate).send(stringTopicArgumentCaptor.capture(), kafkaMessageDtoArgumentCaptor.capture());
 
         assertThat(targetId).isEqualTo(stringArgumentCaptor.getValue());
-        assertThat(this.ProductAddDeleteTopicName).isEqualTo(stringTopicArgumentCaptor.getValue());
+        assertThat(this.productAddDeleteTopicName).isEqualTo(stringTopicArgumentCaptor.getValue());
         assertThat(kafkaMessageDtoArgumentCaptor.getValue().getEventType()).isEqualTo("ProductDeleteEvent");
     }
 

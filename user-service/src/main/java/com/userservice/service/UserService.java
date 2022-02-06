@@ -49,6 +49,19 @@ public class UserService {
         return userEntity.toResponseDto();
     }
 
+    public EmailResponseDto getEmail(String id) {
+        Optional<UserEntity> optionalUserEntity = this.userDao.findById(id);
+
+        UserEntity userEntity =
+                optionalUserEntity.orElseThrow(
+                        () -> new UserNotExistingException("존재하는 유저가 없습니다.")
+                );
+
+        return EmailResponseDto.builder()
+                .email(userEntity.getEmail())
+                .build();
+    }
+
     @Transactional
     public void update(UserUpdateDto userUpdateDto) {
         Optional<UserEntity> optionalUserEntity = this.userDao.findById(userUpdateDto.getId());

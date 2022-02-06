@@ -1,14 +1,17 @@
 package com.productservice.service;
 
 import com.productservice.client.CategoryServiceClient;
+import com.productservice.client.UserServiceClient;
 import com.productservice.dao.ProductDao;
 import com.productservice.domain.ProductEntity;
 import com.productservice.dto.*;
 import com.productservice.exception.KafkaConnectionException;
 import com.productservice.exception.ProductNotExistingException;
 import com.productservice.mapper.MapToCategoryResponseDtoMapper;
+import com.productservice.mapper.MapToEmailResponseDtoMapper;
 import com.productservice.mapper.MapToResponseDtoMapper;
 import com.productservice.mapper.ProductAddDtoToProductEntityMapper;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -20,12 +23,12 @@ import java.util.Optional;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class ProductService {
 
     private final KafkaTemplate<String, KafkaMessageDto> kafkaTemplate;
     private final ProductDao productDao;
     private final CategoryServiceClient categoryServiceClient;
+    private final UserServiceClient userServiceClient;
     private final String productAddDeleteTopicName;
 
 
@@ -34,10 +37,16 @@ public class ProductService {
 
         // init?
         // 에러 처리 필요
-        ResponseDto response = MapToResponseDtoMapper.map(
+        ResponseDto categoryResponse = MapToResponseDtoMapper.map(
                 this.categoryServiceClient.info(productAddDto.getCategoryId())
         );
-        productEntity.setCategoryName(MapToCategoryResponseDtoMapper.map((Map<String, Object>) response.getData()).getName());
+        productEntity.setCategoryName(MapToCategoryResponseDtoMapper.map((Map<String, Object>) categoryResponse.getData()).getName());
+
+        ResponseDto emailResponse = MapToResponseDtoMapper.map(
+                this.userServiceClient.getEmail(productAddDto.getSellerId())
+        );
+        productEntity.setSellerEmail(MapToEmailResponseDtoMapper.map((Map<String, Object>) emailResponse.getData()).getEmail());
+
         productEntity.setCreatedDate(new Date());
         productEntity.setTotalSales(0L);
 
@@ -101,5 +110,14 @@ public class ProductService {
 
     public void updateCategoryName(CategoryUpdateDto categoryUpdateDto) {
         this.productDao.updateCategoryName(categoryUpdateDto.getId(), categoryUpdateDto.getName());
+    }
+
+    @Builder
+    public ProductService(KafkaTemplate<String, KafkaMessageDto> kafkaTemplate, ProductDao productDao, CategoryServiceClient categoryServiceClient, UserServiceClient userServiceClient, String productAddDeleteTopicName) {
+        this.kafkaTemplate = kafkaTemplate;
+        this.productDao = productDao;
+        this.categoryServiceClient = categoryServiceClient;
+        this.userServiceClient = userServiceClient;
+        this.productAddDeleteTopicName = productAddDeleteTopicName;
     }
 }

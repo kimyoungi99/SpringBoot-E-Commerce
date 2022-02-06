@@ -53,6 +53,19 @@ public class UserController {
                         .build());
     }
 
+    @GetMapping(value = "/getEmail/{id}")
+    public ResponseEntity<ResponseDto> getEmail(@PathVariable String id) {
+        EmailResponseDto emailResponseDto = this.userService.getEmail(id);
+
+        return ResponseEntity.ok()
+                .body(ResponseDto.builder()
+                        .status(HttpStatus.OK)
+                        .message("ok")
+                        .dateTime(LocalDateTime.now())
+                        .data(emailResponseDto)
+                        .build());
+    }
+
     @PostMapping(value = "/update")
     public ResponseEntity<ResponseDto> update(@RequestBody UserUpdateDto userUpdateDto) {
         this.userService.update(userUpdateDto);
