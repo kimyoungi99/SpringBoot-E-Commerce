@@ -12,4 +12,7 @@ public class ProductDeleteDto {
     public ProductDeleteDto(String id) {
         this.id = id;
     }
+
+    public ProductDeleteDto() {
+    }
 }

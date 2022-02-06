@@ -38,7 +38,7 @@ public class KafkaPublisherConfig {
     }
 
     @Bean
-    public String UserUpdateTopicName() {
+    public String userUpdateTopicName() {
         return this.userUpdateTopicName;
     }
 }

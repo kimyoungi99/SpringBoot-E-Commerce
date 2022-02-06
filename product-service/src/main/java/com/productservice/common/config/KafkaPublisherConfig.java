@@ -1,6 +1,6 @@
-package com.categoryserver.common.config;
+package com.productservice.common.config;
 
-import com.categoryserver.dto.KafkaMessageDto;
+import com.productservice.dto.KafkaMessageDto;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,8 +20,8 @@ public class KafkaPublisherConfig {
     @Value(value = "${spring.kafka.bootstrap-servers}")
     private String bootstrap;
 
-    @Value(value = "${topic.category.update.name}")
-    private String categoryUpdateTopicName;
+    @Value(value = "${topic.product.add-delete.name}")
+    private String productAddDeleteTopicName;
 
     @Bean
     public ProducerFactory<String, KafkaMessageDto> kafkaProducerFactory() {
@@ -38,7 +38,7 @@ public class KafkaPublisherConfig {
     }
 
     @Bean
-    public String categoryUpdateTopicName() {
-        return this.categoryUpdateTopicName;
+    public String productAddDeleteTopicName() {
+        return this.productAddDeleteTopicName;
     }
 }

@@ -67,8 +67,8 @@ public class CategoryService {
         // 카테고리 수정 시 전파
         if(!categoryEntity.getName().equals(categoryUpdateDto.getName())) {
             KafkaMessageDto kafkaMessageDto = KafkaMessageDto.builder()
-                    .domain("UserService")
-                    .eventType("EmailUpdateEvent")
+                    .domain("CategoryService")
+                    .eventType("CategoryUpdateEvent")
                     .data(CategoryUpdateDto.builder()
                             .id(categoryUpdateDto.getId())
                             .name(categoryUpdateDto.getName())
