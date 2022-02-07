@@ -12,7 +12,6 @@ import com.productservice.mapper.MapToEmailResponseDtoMapper;
 import com.productservice.mapper.MapToResponseDtoMapper;
 import com.productservice.mapper.ProductAddDtoToProductEntityMapper;
 import lombok.Builder;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -55,7 +54,7 @@ public class ProductService {
         KafkaMessageDto kafkaMessageDto = KafkaMessageDto.builder()
                 .domain("ProductService")
                 .eventType("ProductAddEvent")
-                .data(ProductAddMessageDto.builder()
+                .data(ProductAddDeleteMessageDto.builder()
                         .id(productId)
                         .name(productAddDto.getName())
                         .price(productAddDto.getPrice())
@@ -76,16 +75,29 @@ public class ProductService {
     }
 
     public void delete(ProductDeleteDto productDeleteDto) {
-        String productId = this.productDao.deleteById(productDeleteDto.getId());
+        Optional<ProductEntity> optionalProductEntity = this.productDao.findAndRemove(productDeleteDto.getId());
+
+        ProductEntity productEntity =
+                optionalProductEntity.orElseThrow(
+                        () -> new ProductNotExistingException("존재하지 않는 상품 오류.")
+                );
 
         KafkaMessageDto kafkaMessageDto = KafkaMessageDto.builder()
                 .domain("ProductService")
                 .eventType("ProductDeleteEvent")
-                .data(productDeleteDto)
+                .data(ProductAddDeleteMessageDto.builder()
+                        .id(productEntity.getId())
+                        .name(productEntity.getName())
+                        .price(productEntity.getPrice())
+                        .sellerId(productEntity.getSellerId())
+                        .categoryId(productEntity.getCategoryId())
+                        .stock(productEntity.getStock())
+                        .build()
+                )
                 .build();
         try {
             this.kafkaTemplate.send(this.productAddDeleteTopicName, kafkaMessageDto);
-            log.info("상품 삭제 성공 : " + "(id : " + productId);
+            log.info("상품 삭제 성공 : " + "(id : " + productEntity.getId() + ")");
         }
         catch (Exception e) {
             log.error("name: " + e.getClass().getSimpleName() + "\nmsg :" + e.getMessage());

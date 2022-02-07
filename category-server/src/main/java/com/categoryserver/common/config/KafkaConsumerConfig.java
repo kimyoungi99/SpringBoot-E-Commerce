@@ -1,6 +1,6 @@
-package com.productservice.common.config;
+package com.categoryserver.common.config;
 
-import com.productservice.dto.KafkaMessageDto;
+import com.categoryserver.dto.KafkaMessageDto;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,16 +22,13 @@ public class KafkaConsumerConfig {
     @Value(value = "${spring.kafka.bootstrap-servers}")
     private String bootstrap;
 
-    @Value(value = "${topic.user.update.name}")
-    private String userUpdateTopicName;
-
-    @Value(value = "${topic.category.update.name}")
-    private String categoryUpdateTopicName;
+    @Value(value = "${topic.product.add-delete.name}")
+    private String productAddDeleteTopicName;
 
     public ConsumerFactory<String, KafkaMessageDto> kafkaConsumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, this.bootstrap);
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, "product-service");
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, "category-service");
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false");
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
 
@@ -54,12 +51,7 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public String userUpdateTopicName() {
-        return this.userUpdateTopicName;
-    }
-
-    @Bean
-    public String categoryUpdateTopicName() {
-        return this.categoryUpdateTopicName;
+    public String productAddDeleteTopicName() {
+        return this.productAddDeleteTopicName;
     }
 }

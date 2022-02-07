@@ -82,6 +82,17 @@ class MongoDBCategoryDaoTest {
     }
 
     @Test
+    @DisplayName("count 수정 테스트")
+    public void addToCountTest() {
+        this.categoryDao.insert(this.categoryEntity1);
+        this.categoryDao.addToCount(this.categoryEntity1.getId(), -2L);
+
+        CategoryEntity categoryEntity = this.categoryDao.findById(this.categoryEntity1.getId()).get();
+
+        assertThat(categoryEntity.getCount()).isEqualTo(this.categoryEntity1.getCount() - 2L);
+    }
+
+    @Test
     @Disabled
     @DisplayName("데이터 베이스 연결 오류 테스트")
     public void databaseConnectionExceptionTest() {

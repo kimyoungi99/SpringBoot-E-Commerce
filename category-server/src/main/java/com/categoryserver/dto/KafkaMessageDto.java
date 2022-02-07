@@ -17,4 +17,7 @@ public class KafkaMessageDto {
         this.eventType = eventType;
         this.data = data;
     }
+
+    public KafkaMessageDto() {
+    }
 }

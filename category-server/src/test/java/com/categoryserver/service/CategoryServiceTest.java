@@ -117,6 +117,23 @@ class CategoryServiceTest {
         );
     }
 
+    @Test
+    @DisplayName("addToCount 테스트")
+    public void addToCount() {
+        ArgumentCaptor<String> idArgumentCaptor
+                = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<Long> valueArgumentCaptor
+                = ArgumentCaptor.forClass(Long.class);
+        String id = "Asdf";
+        Long value = 100L;
+
+        this.categoryService.addToCount(id, value);
+        Mockito.verify(this.categoryDao).addToCount(idArgumentCaptor.capture(), valueArgumentCaptor.capture());
+
+        assertThat(idArgumentCaptor.getValue()).isEqualTo(id);
+        assertThat(valueArgumentCaptor.getValue()).isEqualTo(value);
+    }
+
     private void checkSameCategoryEntity(CategoryEntity categoryEntity1, CategoryEntity categoryEntity2) {
         assertThat(categoryEntity1.getId()).isEqualTo(categoryEntity2.getId());
         assertThat(categoryEntity1.getName()).isEqualTo(categoryEntity2.getName());

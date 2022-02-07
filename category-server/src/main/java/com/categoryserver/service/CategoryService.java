@@ -26,7 +26,7 @@ public class CategoryService {
 
     private final KafkaTemplate<String, KafkaMessageDto> kafkaTemplate;
     private final CategoryDao categoryDao;
-    private final String userUpdateTopicName;
+    private final String categoryUpdateTopicName;
 
     public List<CategoryResponseDto> getAll() {
         return this.categoryDao.findAll().stream().map(CategoryEntity::toResponseDto).collect(Collectors.toList());
@@ -76,12 +76,16 @@ public class CategoryService {
                     )
                     .build();
             try {
-                this.kafkaTemplate.send(this.userUpdateTopicName, kafkaMessageDto);
+                this.kafkaTemplate.send(this.categoryUpdateTopicName, kafkaMessageDto);
             }
             catch (Exception e) {
                 log.error("name: " + e.getClass().getSimpleName() + "\nmsg :" + e.getMessage());
                 throw new KafkaConnectionException("카프카 응답 오류.");
             }
         }
+    }
+
+    public void addToCount(String id, Long value) {
+        this.categoryDao.addToCount(id, value);
     }
 }

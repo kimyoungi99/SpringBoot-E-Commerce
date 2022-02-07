@@ -36,6 +36,24 @@ public class MongoDBProductDao implements ProductDao {
     }
 
     @Override
+    public Optional<ProductEntity> findAndRemove(String id) {
+
+        Query findByIdQuery = new Query();
+        findByIdQuery.addCriteria(Criteria.where("id").is(id));
+
+        ProductEntity productEntity = null;
+
+        try {
+            productEntity = mongoTemplate.findAndRemove(findByIdQuery, ProductEntity.class);
+        } catch (Exception e) {
+            log.error("name: " + e.getClass().getSimpleName() + "\nmsg :" + e.getMessage());
+            throw new DataResponseException("유저 데이터를 불러오는 도중 오류.");
+        }
+
+        return Optional.ofNullable(productEntity);
+    }
+
+    @Override
     public String insert(ProductEntity productEntity) {
         try {
             mongoTemplate.insert(productEntity);

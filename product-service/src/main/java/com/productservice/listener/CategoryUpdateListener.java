@@ -20,7 +20,7 @@ public class CategoryUpdateListener {
     private final ProductService productService;
 
     @KafkaListener(topics = "${topic.category.update.name}", containerFactory = "concurrentKafkaListenerContainerFactory")
-    public void userUpdateListener(KafkaMessageDto kafkaMessageDto , Acknowledgment ack) {
+    public void userUpdateListener(KafkaMessageDto kafkaMessageDto, Acknowledgment ack) {
         log.info("카프카 메세지 리스닝 성공 : " + kafkaMessageDto.getEventType());
 
         CategoryUpdateDto categoryUpdateDto = MapToCategoryUpdateDtoMapper.map((Map<String, String>)  kafkaMessageDto.getData());

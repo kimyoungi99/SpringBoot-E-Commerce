@@ -8,6 +8,8 @@ public interface ProductDao {
 
     Optional<ProductEntity> findById(String id);
 
+    Optional<ProductEntity> findAndRemove(String id);
+
     String insert(ProductEntity productEntity);
 
     void update(ProductEntity productEntity);

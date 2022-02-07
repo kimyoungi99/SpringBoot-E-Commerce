@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.core.SimpleMongoClientDatabaseFactory;
 import org.springframework.test.context.TestPropertySource;
 
 import java.util.Date;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -124,6 +125,16 @@ class MongoDBProductDaoTest {
         ProductEntity productEntity = this.productDao.findById(this.productEntity1.getId()).get();
 
         checkSameProductEntity(this.productEntity1, productEntity);
+    }
+
+    @Test
+    @DisplayName("findAndRemove 테스트")
+    public void findAndRemoveTest() {
+        this.productDao.insert(this.productEntity1);
+        ProductEntity productEntity = this.productDao.findAndRemove(this.productEntity1.getId()).get();
+
+        assertThat(this.productDao.findById(this.productEntity1.getId())).isEmpty();
+        checkSameProductEntity(productEntity, this.productEntity1);
     }
 
     @Test

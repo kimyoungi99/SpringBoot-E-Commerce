@@ -92,6 +92,22 @@ public class MongoDBCategoryDao implements CategoryDao {
         return id;
     }
 
+    @Override
+    public void addToCount(String id, Long value) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("id").is(id));
+
+        Update update = new Update();
+        update.inc("count", value);
+
+        try {
+            mongoTemplate.updateFirst(query, update, CategoryEntity.class);
+        } catch (Exception e) {
+            log.error("name: " + e.getClass().getSimpleName() + "\nmsg :" + e.getMessage());
+            throw new DatabaseConnectionException("데이터베이스 응답 오류.");
+        }
+    }
+
     public MongoDBCategoryDao(MongoTemplate mongoTemplate) {
         this.mongoTemplate = mongoTemplate;
     }

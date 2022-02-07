@@ -16,4 +16,6 @@ public interface CategoryDao {
     void update(CategoryEntity categoryEntity);
 
     String deleteById(String id);
+
+    void addToCount(String id, Long value);
 }

@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class ProductAddMessageDto {
+public class ProductAddDeleteMessageDto {
 
     private String id;
 
@@ -19,7 +19,7 @@ public class ProductAddMessageDto {
     private String categoryId;
 
     @Builder
-    public ProductAddMessageDto(String id, String sellerId, String name, Long stock, Long price, String categoryId) {
+    public ProductAddDeleteMessageDto(String id, String sellerId, String name, Long stock, Long price, String categoryId) {
         this.id = id;
         this.sellerId = sellerId;
         this.name = name;
