@@ -68,7 +68,7 @@ class ProductControllerTest {
     }
 
     @Test
-    @DisplayName("add test")
+    @DisplayName("추가 테스트")
     void addTest() {
         ArgumentCaptor<ProductEntity> productEntityArgumentCaptor
                 = ArgumentCaptor.forClass(ProductEntity.class);
@@ -117,7 +117,7 @@ class ProductControllerTest {
     }
 
     @Test
-    @DisplayName("delete test")
+    @DisplayName("삭제 테스트")
     void deleteTest() {
         ArgumentCaptor<String> stringArgumentCaptor
                 = ArgumentCaptor.forClass(String.class);
@@ -126,11 +126,12 @@ class ProductControllerTest {
                 = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<KafkaMessageDto> kafkaMessageDtoArgumentCaptor
                 = ArgumentCaptor.forClass(KafkaMessageDto.class);
+        Mockito.when(this.productDao.findAndRemove(targetId)).thenReturn(Optional.ofNullable(this.productEntity1));
 
         this.productController.delete(ProductDeleteDto.builder()
                 .id(targetId)
                 .build());
-        Mockito.verify(this.productDao).deleteById(stringArgumentCaptor.capture());
+        Mockito.verify(this.productDao).findAndRemove(stringArgumentCaptor.capture());
         Mockito.verify(this.kafkaTemplate).send(stringTopicArgumentCaptor.capture(), kafkaMessageDtoArgumentCaptor.capture());
 
         assertThat(targetId).isEqualTo(stringArgumentCaptor.getValue());
@@ -139,7 +140,7 @@ class ProductControllerTest {
     }
 
     @Test
-    @DisplayName("info test")
+    @DisplayName("조회 테스트")
     void infoTest() {
         String targetId = "asdf";
         Mockito.when(this.productDao.findById(targetId)).thenReturn(Optional.ofNullable(this.productEntity1));
@@ -147,6 +148,18 @@ class ProductControllerTest {
         ResponseEntity<ResponseDto> response = this.productController.info(targetId);
 
         checkSameProductResponseDto((ProductResponseDto) response.getBody().getData(), this.productEntity1.toResponseDto());
+    }
+
+    @Test
+    @DisplayName("가격 조회 테스트")
+    void priceTest() {
+        String targetId = "asdf";
+        Mockito.when(this.productDao.findById(targetId)).thenReturn(Optional.ofNullable(this.productEntity1));
+
+        ResponseEntity<ResponseDto> response = this.productController.infoForOrder(targetId);
+
+        assertThat(((ProductForOrderDto) response.getBody().getData()).getPrice()).isEqualTo(this.productEntity1.getPrice());
+        assertThat(((ProductForOrderDto) response.getBody().getData()).getName()).isEqualTo(this.productEntity1.getName());
     }
 
     private void checkSameProductEntityWithoutCreatedTime(ProductEntity productEntity1, ProductEntity productEntity2) {

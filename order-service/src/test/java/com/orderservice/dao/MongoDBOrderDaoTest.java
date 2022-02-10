@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.TestPropertySource;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -42,6 +43,8 @@ class MongoDBOrderDaoTest {
                 .buyerId("12341234")
                 .moneyPayed(10000L)
                 .pointPayed(5000L)
+                .orderTime(LocalDateTime.now())
+                .address("asdfasdfasdfsadfsadfsa")
                 .build();
         this.orderEntity2 = OrderEntity.builder()
                 .productId("asdf")
@@ -52,6 +55,8 @@ class MongoDBOrderDaoTest {
                 .buyerId("12341234")
                 .moneyPayed(1000000L)
                 .pointPayed(50000L)
+                .orderTime(LocalDateTime.now())
+                .address("asdfasdfasdfsadfsadfsa")
                 .build();
     }
 

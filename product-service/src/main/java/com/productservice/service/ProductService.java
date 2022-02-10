@@ -116,6 +116,21 @@ public class ProductService {
         return productEntity.toResponseDto();
     }
 
+    public ProductForOrderDto infoForOrder(String id) {
+        Optional<ProductEntity> optionalProductEntity = this.productDao.findById(id);
+
+        ProductEntity productEntity =
+                optionalProductEntity.orElseThrow(
+                        () -> new ProductNotExistingException("존재하지 않는 상품 오류.")
+                );
+
+        return ProductForOrderDto.builder()
+                .id(productEntity.getId())
+                .price(productEntity.getPrice())
+                .name(productEntity.getName())
+                .build();
+    }
+
     public void updateSellerEmail(EmailUpdateDto emailUpdateDto) {
         this.productDao.updateSellerEmail(emailUpdateDto.getId(), emailUpdateDto.getEmail());
     }

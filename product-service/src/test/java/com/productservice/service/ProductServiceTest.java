@@ -68,7 +68,7 @@ class ProductServiceTest {
     }
 
     @Test
-    @DisplayName("insert test")
+    @DisplayName("추가 테스트")
     void insertTest() {
         ArgumentCaptor<ProductEntity> productEntityArgumentCaptor
                 = ArgumentCaptor.forClass(ProductEntity.class);
@@ -117,7 +117,7 @@ class ProductServiceTest {
     }
 
     @Test
-    @DisplayName("delete test")
+    @DisplayName("삭제 테스트")
     void deleteTest() {
         ArgumentCaptor<String> stringArgumentCaptor
                 = ArgumentCaptor.forClass(String.class);
@@ -126,11 +126,12 @@ class ProductServiceTest {
                 = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<KafkaMessageDto> kafkaMessageDtoArgumentCaptor
                 = ArgumentCaptor.forClass(KafkaMessageDto.class);
+        Mockito.when(this.productDao.findAndRemove(targetId)).thenReturn(Optional.ofNullable(this.productEntity1));
 
         this.productService.delete(ProductDeleteDto.builder()
                 .id(targetId)
                 .build());
-        Mockito.verify(this.productDao).deleteById(stringArgumentCaptor.capture());
+        Mockito.verify(this.productDao).findAndRemove(stringArgumentCaptor.capture());
         Mockito.verify(this.kafkaTemplate).send(stringTopicArgumentCaptor.capture(), kafkaMessageDtoArgumentCaptor.capture());
 
         assertThat(targetId).isEqualTo(stringArgumentCaptor.getValue());
@@ -139,8 +140,20 @@ class ProductServiceTest {
     }
 
     @Test
-    @DisplayName("info test")
+    @DisplayName("가격 조회 테스트")
     void infoTest() {
+        String targetId = "asdf";
+        Mockito.when(this.productDao.findById(targetId)).thenReturn(Optional.ofNullable(this.productEntity1));
+
+        ProductForOrderDto price = this.productService.infoForOrder(targetId);
+
+        assertThat(price.getPrice()).isEqualTo(this.productEntity1.getPrice());
+        assertThat(price.getName()).isEqualTo(this.productEntity1.getName());
+    }
+
+    @Test
+    @DisplayName("조회 테스트")
+    void getPriceTest() {
         String targetId = "asdf";
         Mockito.when(this.productDao.findById(targetId)).thenReturn(Optional.ofNullable(this.productEntity1));
 
