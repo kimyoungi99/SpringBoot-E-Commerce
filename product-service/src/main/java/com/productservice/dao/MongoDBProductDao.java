@@ -127,6 +127,22 @@ public class MongoDBProductDao implements ProductDao {
     }
 
     @Override
+    public void updateStock(String id, Long quantity) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("id").is(id));
+
+        Update update = new Update();
+        update.inc("stock", quantity);
+
+        try {
+            mongoTemplate.updateMulti(query, update, ProductEntity.class);
+        } catch (Exception e) {
+            log.error("name: " + e.getClass().getSimpleName() + "\nmsg :" + e.getMessage());
+            throw new DatabaseConnectionException("데이터베이스 응답 오류.");
+        }
+    }
+
+    @Override
     public String deleteById(String id) {
         try {
             mongoTemplate.remove(new Query(Criteria.where("id").is(id)), ProductEntity.class);

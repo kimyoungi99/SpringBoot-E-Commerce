@@ -11,6 +11,7 @@ public class MapToProductForOrderDtoMapper {
                 .id((String) map.get("id"))
                 .name((String) map.get("name"))
                 .price(Long.valueOf((Integer) map.get("price")))
+                .sellerId((String) map.get("sellerId"))
                 .build();
     }
 }

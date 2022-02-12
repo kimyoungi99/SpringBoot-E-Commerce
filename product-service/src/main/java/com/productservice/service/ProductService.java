@@ -128,6 +128,7 @@ public class ProductService {
                 .id(productEntity.getId())
                 .price(productEntity.getPrice())
                 .name(productEntity.getName())
+                .sellerId(productEntity.getSellerId())
                 .build();
     }
 
@@ -137,6 +138,10 @@ public class ProductService {
 
     public void updateCategoryName(CategoryUpdateDto categoryUpdateDto) {
         this.productDao.updateCategoryName(categoryUpdateDto.getId(), categoryUpdateDto.getName());
+    }
+
+    public void updateStock(StockUpdateDto stockUpdateDto) {
+        this.productDao.updateStock(stockUpdateDto.getProductId(), stockUpdateDto.getQuantity());
     }
 
     @Builder

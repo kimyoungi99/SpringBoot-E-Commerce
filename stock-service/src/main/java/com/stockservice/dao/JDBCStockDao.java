@@ -25,7 +25,7 @@ public class JDBCStockDao implements StockDao {
     public void insert(StockEntity stockEntity) {
         try {
             this.jdbcTemplate.update(
-                    String.format("Insert INTO stock(product_id, stock) VALUES(%s, %s)", stockEntity.getProductId(), stockEntity.getStock())
+                    String.format("INSERT INTO stock(product_id, stock) VALUES('%s', %s)", stockEntity.getProductId(), stockEntity.getStock())
             );
         } catch (Exception e) {
             log.error("name: " + e.getClass().getSimpleName() + "\nmsg :" + e.getMessage());
@@ -40,7 +40,7 @@ public class JDBCStockDao implements StockDao {
             try {
                 getLock(connection, lockName, this.lockTimeoutSeconds);
                 this.jdbcTemplate.update(
-                        String.format("UPDATE stock SET stock = stock + %s WHERE product_id = %s", quantity.toString(), productId)
+                        String.format("UPDATE stock SET stock = stock + %s WHERE product_id = '%s'", quantity.toString(), productId)
                 );
             } finally {
                 releaseLock(connection, lockName);
@@ -55,7 +55,7 @@ public class JDBCStockDao implements StockDao {
     public void updateStock(String productId, Long quantity) {
         try {
             this.jdbcTemplate.update(
-                    String.format("UPDATE stock SET stock = stock + %s WHERE product_id = %s", quantity.toString(), productId)
+                    String.format("UPDATE stock SET stock = stock + %s WHERE product_id = '%s'", quantity.toString(), productId)
             );
         } catch (Exception e) {
             log.error("name: " + e.getClass().getSimpleName() + "\nmsg :" + e.getMessage());
@@ -75,7 +75,7 @@ public class JDBCStockDao implements StockDao {
                 );
                 if (stock - quantity >= 0L) {
                     this.jdbcTemplate.update(
-                            String.format("UPDATE stock SET stock = stock - %s WHERE product_id = %s", quantity.toString(), productId)
+                            String.format("UPDATE stock SET stock = stock - %s WHERE product_id = '%s'", quantity.toString(), productId)
                     );
                     return true;
                 }
@@ -95,10 +95,13 @@ public class JDBCStockDao implements StockDao {
         Long stock = null;
         try {
             stock = this.jdbcTemplate.queryForObject(
-                    String.format("SELECT stock FROM stock WHERE product_id = %s", productId),
+                    String.format("SELECT stock FROM stock WHERE product_id = '%s'", productId),
                     Long.class
             );
         } catch (Exception e) {
+            if(e.getClass().getSimpleName().equals("EmptyResultDataAccessException"))
+                return Optional.ofNullable(null);
+
             log.error("name: " + e.getClass().getSimpleName() + "\nmsg :" + e.getMessage());
             throw new MySQLException("데이터 베이스 오류.");
         }
@@ -109,7 +112,7 @@ public class JDBCStockDao implements StockDao {
     public void deleteByProductId(String productId) {
         try {
             this.jdbcTemplate.update(
-                    String.format("Delete FROM stock WHERE product_id = %s", productId)
+                    String.format("Delete FROM stock WHERE product_id = '%s'", productId)
             );
         } catch (Exception e) {
             log.error("name: " + e.getClass().getSimpleName() + "\nmsg :" + e.getMessage());

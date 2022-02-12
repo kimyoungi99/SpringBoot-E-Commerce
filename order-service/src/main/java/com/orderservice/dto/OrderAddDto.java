@@ -9,8 +9,6 @@ public class OrderAddDto {
 
     private Long quantity;
 
-    private String sellerId;
-
     private String buyerId;
 
     private Long moneyPayed;
@@ -21,10 +19,9 @@ public class OrderAddDto {
 
     @Builder
 
-    public OrderAddDto(String productId, Long quantity, String sellerId, String buyerId, Long moneyPayed, Long pointPayed, String address) {
+    public OrderAddDto(String productId, Long quantity, String buyerId, Long moneyPayed, Long pointPayed, String address) {
         this.productId = productId;
         this.quantity = quantity;
-        this.sellerId = sellerId;
         this.buyerId = buyerId;
         this.moneyPayed = moneyPayed;
         this.pointPayed = pointPayed;

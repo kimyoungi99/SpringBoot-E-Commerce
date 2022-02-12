@@ -27,7 +27,7 @@ class JDBCStockDaoTest {
     public void init() {
         this.stockEntity = StockEntity.builder()
                 .stock(100L)
-                .productId("3")
+                .productId("6207118e71ce0c6d3524e4d2")
                 .build();
     }
 

@@ -8,7 +8,6 @@ public class OrderAddDtoToOrderEntityMapper {
         return OrderEntity.builder()
                 .productId(orderAddDto.getProductId())
                 .quantity(orderAddDto.getQuantity())
-                .sellerId(orderAddDto.getSellerId())
                 .buyerId(orderAddDto.getBuyerId())
                 .moneyPayed(orderAddDto.getMoneyPayed())
                 .pointPayed(orderAddDto.getPointPayed())

@@ -18,5 +18,7 @@ public interface ProductDao {
 
     void updateCategoryName(String categoryId, String categoryName);
 
+    void updateStock(String id, Long quantity);
+
     String deleteById(String id);
 }
