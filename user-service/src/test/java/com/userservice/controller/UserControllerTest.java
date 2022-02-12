@@ -2,10 +2,7 @@ package com.userservice.controller;
 
 import com.userservice.dao.UserDao;
 import com.userservice.domain.UserEntity;
-import com.userservice.dto.ResponseDto;
-import com.userservice.dto.UserDeleteDto;
-import com.userservice.dto.UserJoinDto;
-import com.userservice.dto.UserResponseDto;
+import com.userservice.dto.*;
 import com.userservice.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -17,6 +14,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -31,10 +29,14 @@ class UserControllerTest {
     @Mock
     private UserDao userDao;
 
+    @Mock
+    private KafkaTemplate<String, KafkaMessageDto> kafkaTemplate;
+
     private UserController userController;
 
     // Test Data
     private UserEntity userEntity1;
+    private String kafkaTopicName = "asdf";
 
     @BeforeEach
     public void init() {
@@ -50,7 +52,7 @@ class UserControllerTest {
                 .createdDate(new Date())
                 .build();
         MockitoAnnotations.openMocks(this);
-        this.userController = new UserController(new UserService(this.userDao));
+        this.userController = new UserController(new UserService(this.kafkaTemplate, this.userDao, this.kafkaTopicName));
     }
 
     @Test
@@ -96,6 +98,49 @@ class UserControllerTest {
         ResponseEntity<ResponseDto> response = this.userController.info(this.userEntity1.getEmail());
 
         checkSameUserResponseDto((UserResponseDto) response.getBody().getData(), this.userEntity1.toResponseDto());
+    }
+
+    @Test
+    @DisplayName("update 테스트")
+    public void updateTest() {
+        String userId = "asdf";
+        Mockito.when(this.userDao.findById(userId)).thenReturn(Optional.ofNullable(this.userEntity1));
+        ArgumentCaptor<KafkaMessageDto> kafkaMessageDtoArgumentCaptor
+                = ArgumentCaptor.forClass(KafkaMessageDto.class);
+        ArgumentCaptor<UserEntity> userEntityArgumentCaptor
+                = ArgumentCaptor.forClass(UserEntity.class);
+        ArgumentCaptor<String> stringArgumentCaptor
+                = ArgumentCaptor.forClass(String.class);
+        UserUpdateDto userUpdateDto = UserUpdateDto.builder()
+                .id(userId)
+                .email("newemail@naver.com")
+                .address("busan, korea")
+                .build();
+
+
+        this.userController.update(userUpdateDto);
+
+        Mockito.verify(this.userDao).update(userEntityArgumentCaptor.capture());
+        Mockito.verify(this.kafkaTemplate).send(stringArgumentCaptor.capture(), kafkaMessageDtoArgumentCaptor.capture());
+
+        assertThat(userUpdateDto.getId()).isEqualTo(userEntityArgumentCaptor.getValue().getId());
+        assertThat(userUpdateDto.getEmail()).isEqualTo(userEntityArgumentCaptor.getValue().getEmail());
+        assertThat(userUpdateDto.getAddress()).isEqualTo(userEntityArgumentCaptor.getValue().getAddress());
+
+        assertThat(this.kafkaTopicName).isEqualTo(stringArgumentCaptor.getValue());
+        assertThat(userUpdateDto.getEmail()).isEqualTo(
+                ((EmailUpdateDto) kafkaMessageDtoArgumentCaptor.getValue().getData()).getEmail()
+        );
+    }
+
+    @Test
+    @DisplayName("getEmail 테스트")
+    public void getEmailTest() {
+        Mockito.when(this.userDao.findById(this.userEntity1.getId())).thenReturn(Optional.ofNullable(this.userEntity1));
+
+        ResponseEntity<ResponseDto> response = this.userController.getEmail(this.userEntity1.getId());
+
+        assertThat(((EmailResponseDto) response.getBody().getData()).getEmail()).isEqualTo(this.userEntity1.getEmail());
     }
 
     private void checkSameUserResponseDto(UserResponseDto userResponseDto1, UserResponseDto userResponseDto2) {

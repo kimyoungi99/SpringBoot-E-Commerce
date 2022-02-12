@@ -56,6 +56,14 @@ public class ProductEntity {
         this.createdDate = createdDate;
     }
 
+    public void setSellerEmail(String sellerEmail) {
+        this.sellerEmail = sellerEmail;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
     public ProductResponseDto toResponseDto() {
         return ProductResponseDto.builder()
                 .sellerId(this.sellerId)

@@ -8,7 +8,17 @@ public interface ProductDao {
 
     Optional<ProductEntity> findById(String id);
 
+    Optional<ProductEntity> findAndRemove(String id);
+
     String insert(ProductEntity productEntity);
+
+    void update(ProductEntity productEntity);
+
+    void updateSellerEmail(String sellerId, String sellerEmail);
+
+    void updateCategoryName(String categoryId, String categoryName);
+
+    void updateStock(String id, Long quantity);
 
     String deleteById(String id);
 }

@@ -1,9 +1,6 @@
 package com.productservice.controller;
 
-import com.productservice.dto.ProductAddDto;
-import com.productservice.dto.ProductDeleteDto;
-import com.productservice.dto.ProductResponseDto;
-import com.productservice.dto.ResponseDto;
+import com.productservice.dto.*;
 import com.productservice.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -58,4 +55,19 @@ public class ProductController {
                         .build()
                 );
     }
+
+    @GetMapping(value = "/infoForOrder/{id}")
+    public ResponseEntity<ResponseDto> infoForOrder(@PathVariable String id) {
+        ProductForOrderDto price = this.productService.infoForOrder(id);
+
+        return ResponseEntity.ok()
+                .body(ResponseDto.builder()
+                        .status(HttpStatus.OK)
+                        .message("ok")
+                        .dateTime(LocalDateTime.now())
+                        .data(price)
+                        .build()
+                );
+    }
+
 }

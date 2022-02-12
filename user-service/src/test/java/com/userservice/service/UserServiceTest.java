@@ -2,9 +2,7 @@ package com.userservice.service;
 
 import com.userservice.dao.UserDao;
 import com.userservice.domain.UserEntity;
-import com.userservice.dto.UserDeleteDto;
-import com.userservice.dto.UserJoinDto;
-import com.userservice.dto.UserResponseDto;
+import com.userservice.dto.*;
 import com.userservice.exception.UserNotExistingException;
 import com.userservice.exception.WrongDateFormatException;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.kafka.core.KafkaTemplate;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -31,10 +30,14 @@ class UserServiceTest {
     @Mock
     private UserDao userDao;
 
+    @Mock
+    private KafkaTemplate<String, KafkaMessageDto> kafkaTemplate;
+
     private UserService userService;
 
     // Test Data
     private UserEntity userEntity1;
+    private String kafkaTopicName = "asdf";
 
     @BeforeEach
     public void init() {
@@ -50,7 +53,7 @@ class UserServiceTest {
                 .createdDate(new Date())
                 .build();
         MockitoAnnotations.openMocks(this);
-        this.userService = new UserService(this.userDao);
+        this.userService = new UserService(this.kafkaTemplate, this.userDao, this.kafkaTopicName);
     }
 
     @Test
@@ -119,6 +122,49 @@ class UserServiceTest {
         assertThrows(WrongDateFormatException.class, () -> {
             this.userService.join(wrongUserJoinDto);
         });
+    }
+
+    @Test
+    @DisplayName("getEmail 테스트")
+    public void getEmailTest() {
+        Mockito.when(this.userDao.findById(this.userEntity1.getId())).thenReturn(Optional.ofNullable(this.userEntity1));
+
+        EmailResponseDto emailResponseDto = this.userService.getEmail(this.userEntity1.getId());
+
+        assertThat(emailResponseDto.getEmail()).isEqualTo(this.userEntity1.getEmail());
+    }
+
+    @Test
+    @DisplayName("update 테스트")
+    public void updateTest() {
+        String userId = "asdf";
+        Mockito.when(this.userDao.findById(userId)).thenReturn(Optional.ofNullable(this.userEntity1));
+        ArgumentCaptor<KafkaMessageDto> kafkaMessageDtoArgumentCaptor
+                = ArgumentCaptor.forClass(KafkaMessageDto.class);
+        ArgumentCaptor<UserEntity> userEntityArgumentCaptor
+                = ArgumentCaptor.forClass(UserEntity.class);
+        ArgumentCaptor<String> stringArgumentCaptor
+                = ArgumentCaptor.forClass(String.class);
+        UserUpdateDto userUpdateDto = UserUpdateDto.builder()
+                .id(userId)
+                .email("newemail@naver.com")
+                .address("busan, korea")
+                .build();
+
+
+        this.userService.update(userUpdateDto);
+
+        Mockito.verify(this.userDao).update(userEntityArgumentCaptor.capture());
+        Mockito.verify(this.kafkaTemplate).send(stringArgumentCaptor.capture(), kafkaMessageDtoArgumentCaptor.capture());
+
+        assertThat(userUpdateDto.getId()).isEqualTo(userEntityArgumentCaptor.getValue().getId());
+        assertThat(userUpdateDto.getEmail()).isEqualTo(userEntityArgumentCaptor.getValue().getEmail());
+        assertThat(userUpdateDto.getAddress()).isEqualTo(userEntityArgumentCaptor.getValue().getAddress());
+
+        assertThat(this.kafkaTopicName).isEqualTo(stringArgumentCaptor.getValue());
+        assertThat(userUpdateDto.getEmail()).isEqualTo(
+                ((EmailUpdateDto) kafkaMessageDtoArgumentCaptor.getValue().getData()).getEmail()
+        );
     }
 
     private void checkSameUserResponseDto(UserResponseDto userResponseDto1, UserResponseDto userResponseDto2) {

@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.core.SimpleMongoClientDatabaseFactory;
 import org.springframework.test.context.TestPropertySource;
 
 import java.util.Date;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -73,6 +74,67 @@ class MongoDBProductDaoTest {
         this.productDao.deleteById(this.productEntity1.getId());
 
         assertThat(this.productDao.findById(this.productEntity1.getId())).isEmpty();
+    }
+
+    @Test
+    @DisplayName("싱품 수정 테스트")
+    public void updateTest() {
+        this.productDao.insert(this.productEntity1);
+        ProductEntity update = ProductEntity.builder()
+                .id(this.productEntity1.getId())
+                .sellerEmail("sadf.asdf")
+                .sellerId("123123")
+                .stock(100L)
+                .totalSales(100L)
+                .price(1231230L)
+                .name("hello")
+                .categoryId("Asdfasdf")
+                .categoryName("aaaa")
+                .createdDate(this.productEntity1.getCreatedDate())
+                .build();
+
+        this.productDao.update(update);
+        ProductEntity productEntity = this.productDao.findById(update.getId()).get();
+
+        checkSameProductEntity(productEntity, update);
+    }
+
+    @Test
+    @DisplayName("판매자 이메일 수정 테스트")
+    public void updateSellerEmailTest() {
+        this.productDao.insert(this.productEntity1);
+        String newEmail = "SAfd.asdf";
+
+        this.productDao.updateSellerEmail(this.productEntity1.getSellerId(), newEmail);
+
+        this.productEntity1.setSellerEmail(newEmail);
+        ProductEntity productEntity = this.productDao.findById(this.productEntity1.getId()).get();
+
+        checkSameProductEntity(this.productEntity1, productEntity);
+    }
+
+    @Test
+    @DisplayName("카테고리 이름 수정 테스트")
+    public void updateCategoryNameTest() {
+        this.productDao.insert(this.productEntity1);
+        String newCategory = "asdfasdfasdf";
+
+        this.productDao.updateCategoryName(this.productEntity1.getCategoryId(), newCategory);
+
+        this.productEntity1.setCategoryName(newCategory);
+        ProductEntity productEntity = this.productDao.findById(this.productEntity1.getId()).get();
+
+        checkSameProductEntity(this.productEntity1, productEntity);
+    }
+
+    @Test
+    @DisplayName("findAndRemove 테스트")
+    public void findAndRemoveTest() {
+        this.productDao.insert(this.productEntity1);
+        ProductEntity productEntity = this.productDao.findAndRemove(this.productEntity1.getId()).get();
+
+        assertThat(this.productDao.findById(this.productEntity1.getId())).isEmpty();
+        checkSameProductEntity(productEntity, this.productEntity1);
     }
 
     @Test
