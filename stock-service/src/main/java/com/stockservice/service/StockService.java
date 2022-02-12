@@ -37,6 +37,23 @@ public class StockService {
         log.info("check 요청 : (productId : " + stockCheckDto.getProductId() + " quantity : " + stockCheckDto.getQuantity() + ")");
         boolean result = this.stockDao.checkWithLock(stockCheckDto.getProductId(), stockCheckDto.getQuantity());
 
+        KafkaMessageDto kafkaMessageDto = KafkaMessageDto.builder()
+                .domain("StockService")
+                .eventType("StockUpdateEvent")
+                .data(StockUpdateDto.builder()
+                        .productId(stockCheckDto.getProductId())
+                        .quantity(-stockCheckDto.getQuantity())
+                        .build()
+                )
+                .build();
+
+        try {
+            this.kafkaTemplate.send(this.stockUpdateTopicName, kafkaMessageDto);
+        } catch (Exception e) {
+            log.error("name: " + e.getClass().getSimpleName() + "\nmsg :" + e.getMessage());
+            throw new KafkaConnectionException("카프카 응답 오류.");
+        }
+
         return StockCheckResultDto.builder()
                 .result(result)
                 .build();

@@ -8,7 +8,7 @@ public class MapToStockUpdateDtoMapper {
     public static StockUpdateDto map(Map<String, Object> map) {
         return StockUpdateDto.builder()
                 .productId((String) map.get("productId"))
-                .quantity((Long) map.get("quantity"))
+                .quantity(((Integer) map.get("quantity")).longValue())
                 .build();
     }
 }
