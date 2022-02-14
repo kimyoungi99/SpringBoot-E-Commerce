@@ -15,7 +15,9 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -80,8 +82,17 @@ public class OrderService {
                 .build();
     }
 
-    @Builder
+    public List<OrderResponseDto> getOrderList(String buyerId) {
+        List<OrderEntity> orderEntities = this.orderDao.findAllByBuyerId(buyerId);
+        return orderEntities.stream().map(OrderEntity::toResponseDto).collect(Collectors.toList());
+    }
 
+    public List<OrderResponseDto> getSellList(String sellerId) {
+        List<OrderEntity> orderEntities = this.orderDao.findAllBySellerId(sellerId);
+        return orderEntities.stream().map(OrderEntity::toResponseDto).collect(Collectors.toList());
+    }
+
+    @Builder
     public OrderService(ProductServiceClient productServiceClient, UserServiceClient userServiceClient, StockServiceClient stockServiceClient, OrderDao orderDao) {
         this.productServiceClient = productServiceClient;
         this.userServiceClient = userServiceClient;

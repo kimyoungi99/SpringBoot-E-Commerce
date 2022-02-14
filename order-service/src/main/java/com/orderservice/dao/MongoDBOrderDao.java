@@ -51,13 +51,13 @@ public class MongoDBOrderDao implements OrderDao {
 
     @Override
     public List<OrderEntity> findAllBySellerId(String sellerId) {
-        Query findAllByBuyerIdQuery = new Query();
-        findAllByBuyerIdQuery.addCriteria(Criteria.where("sellerId").is(sellerId));
+        Query findAllBySellerIdQuery = new Query();
+        findAllBySellerIdQuery.addCriteria(Criteria.where("sellerId").is(sellerId));
 
         List<OrderEntity> orderEntityList = null;
 
         try {
-            orderEntityList = this.mongoTemplate.find(findAllByBuyerIdQuery, OrderEntity.class);
+            orderEntityList = this.mongoTemplate.find(findAllBySellerIdQuery, OrderEntity.class);
         } catch (Exception e) {
             log.error("name: " + e.getClass().getSimpleName() + "\nmsg :" + e.getMessage());
             throw new DataResponseException("유저 데이터를 불러오는 도중 오류.");

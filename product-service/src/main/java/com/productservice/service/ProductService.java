@@ -19,8 +19,10 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -127,6 +129,12 @@ public class ProductService {
                 );
 
         return productEntity.toResponseDto();
+    }
+
+    public List<ProductSimpleResponseDto> getAll() {
+        List<ProductEntity> productEntities = this.productDao.findAll();
+
+        return productEntities.stream().map(ProductEntity::toSimpleResponseDto).collect(Collectors.toList());
     }
 
     public ProductForOrderDto infoForOrder(String id) {

@@ -2,6 +2,7 @@ package com.productservice.dao;
 
 import com.productservice.domain.ProductEntity;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ProductDao {
@@ -11,6 +12,8 @@ public interface ProductDao {
     Optional<ProductEntity> findAndRemove(String id);
 
     String insert(ProductEntity productEntity);
+
+    List<ProductEntity> findAll();
 
     void update(ProductEntity productEntity);
 
