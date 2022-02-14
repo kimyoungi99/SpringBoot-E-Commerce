@@ -1,6 +1,7 @@
 package com.productservice.domain;
 
 import com.productservice.dto.ProductResponseDto;
+import com.productservice.dto.ProductSimpleResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.annotation.Id;
@@ -75,6 +76,16 @@ public class ProductEntity {
                 .categoryId(this.categoryId)
                 .categoryName(this.categoryName)
                 .createdDate(this.createdDate)
+                .build();
+    }
+
+    public ProductSimpleResponseDto toSimpleResponseDto() {
+        return ProductSimpleResponseDto.builder()
+                .id(this.id)
+                .name(this.name)
+                .categoryId(this.categoryId)
+                .categoryName(this.categoryName)
+                .price(this.price)
                 .build();
     }
 }

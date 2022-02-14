@@ -5,8 +5,10 @@ import com.productservice.client.UserServiceClient;
 import com.productservice.dao.ProductDao;
 import com.productservice.domain.ProductEntity;
 import com.productservice.dto.*;
+import com.productservice.exception.CategoryServiceConnectionException;
 import com.productservice.exception.KafkaConnectionException;
 import com.productservice.exception.ProductNotExistingException;
+import com.productservice.exception.UserServiceConnectionException;
 import com.productservice.mapper.MapToCategoryResponseDtoMapper;
 import com.productservice.mapper.MapToEmailResponseDtoMapper;
 import com.productservice.mapper.MapToResponseDtoMapper;
@@ -17,8 +19,10 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -35,15 +39,26 @@ public class ProductService {
         ProductEntity productEntity = ProductAddDtoToProductEntityMapper.map(productAddDto);
 
         // init?
-        // 에러 처리 필요
-        ResponseDto categoryResponse = MapToResponseDtoMapper.map(
-                this.categoryServiceClient.info(productAddDto.getCategoryId())
-        );
+        ResponseDto categoryResponse = null;
+        try {
+            categoryResponse = MapToResponseDtoMapper.map(
+                    this.categoryServiceClient.info(productAddDto.getCategoryId())
+            );
+        } catch (Exception e) {
+            log.error("name: " + e.getClass().getSimpleName() + "\nmsg :" + e.getMessage());
+            throw new CategoryServiceConnectionException("카테고리 서비스 응답 오류.");
+        }
         productEntity.setCategoryName(MapToCategoryResponseDtoMapper.map((Map<String, Object>) categoryResponse.getData()).getName());
 
-        ResponseDto emailResponse = MapToResponseDtoMapper.map(
-                this.userServiceClient.getEmail(productAddDto.getSellerId())
-        );
+        ResponseDto emailResponse = null;
+        try {
+            emailResponse = MapToResponseDtoMapper.map(
+                    this.userServiceClient.getEmail(productAddDto.getSellerId())
+            );
+        } catch (Exception e) {
+            log.error("name: " + e.getClass().getSimpleName() + "\nmsg :" + e.getMessage());
+            throw new UserServiceConnectionException("유저 서비스 응답 오류.");
+        }
         productEntity.setSellerEmail(MapToEmailResponseDtoMapper.map((Map<String, Object>) emailResponse.getData()).getEmail());
 
         productEntity.setCreatedDate(new Date());
@@ -116,6 +131,12 @@ public class ProductService {
         return productEntity.toResponseDto();
     }
 
+    public List<ProductSimpleResponseDto> getAll() {
+        List<ProductEntity> productEntities = this.productDao.findAll();
+
+        return productEntities.stream().map(ProductEntity::toSimpleResponseDto).collect(Collectors.toList());
+    }
+
     public ProductForOrderDto infoForOrder(String id) {
         Optional<ProductEntity> optionalProductEntity = this.productDao.findById(id);
 
@@ -129,6 +150,7 @@ public class ProductService {
                 .price(productEntity.getPrice())
                 .name(productEntity.getName())
                 .sellerId(productEntity.getSellerId())
+                .sellerEmail(productEntity.getSellerEmail())
                 .build();
     }
 

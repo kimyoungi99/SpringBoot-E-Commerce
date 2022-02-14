@@ -6,6 +6,8 @@ import com.orderservice.client.UserServiceClient;
 import com.orderservice.dao.OrderDao;
 import com.orderservice.domain.OrderEntity;
 import com.orderservice.dto.*;
+import com.orderservice.exception.ProductServiceConnectionException;
+import com.orderservice.exception.StockServiceConnectionException;
 import com.orderservice.mapper.*;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +15,9 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -28,10 +32,16 @@ public class OrderService {
     public OrderAddResultResponse order(OrderAddDto orderAddDto) {
         OrderEntity orderEntity = OrderAddDtoToOrderEntityMapper.map(orderAddDto);
 
-        // 에러 처리 필요
-        ResponseDto productResponse = MapToResponseDtoMapper.map(
-                this.productServiceClient.getProduct(orderEntity.getProductId())
-        );
+        // init
+        ResponseDto productResponse = null;
+        try {
+            productResponse = MapToResponseDtoMapper.map(
+                    this.productServiceClient.getProduct(orderEntity.getProductId())
+            );
+        } catch (Exception e) {
+            log.error("name: " + e.getClass().getSimpleName() + "\nmsg :" + e.getMessage());
+            throw new ProductServiceConnectionException("상품 서비스 응답 오류.");
+        }
         ProductForOrderDto productForOrderDto = MapToProductForOrderDtoMapper.map((Map<String, Object>) productResponse.getData());
         if (productForOrderDto.getPrice() != orderAddDto.getMoneyPayed() + orderAddDto.getPointPayed()) {
             return OrderAddResultResponse.builder()
@@ -40,13 +50,15 @@ public class OrderService {
                     .build();
         }
 
-        ResponseDto emailResponse = MapToResponseDtoMapper.map(
-                this.userServiceClient.getEmail(productForOrderDto.getSellerId())
-        );
-        String sellerEmail = MapToEmailResponseDtoMapper.map((Map<String, Object>) emailResponse.getData()).getEmail();
-        ResponseDto stockCheckResponse = MapToResponseDtoMapper.map(
-                this.stockServiceClient.check(orderAddDto.getProductId(), orderAddDto.getQuantity())
-        );
+        ResponseDto stockCheckResponse = null;
+        try {
+            stockCheckResponse = MapToResponseDtoMapper.map(
+                    this.stockServiceClient.check(orderAddDto.getProductId(), orderAddDto.getQuantity())
+            );
+        } catch (Exception e) {
+            log.error("name: " + e.getClass().getSimpleName() + "\nmsg :" + e.getMessage());
+            throw new StockServiceConnectionException("수량 서비스 응답 오류.");
+        }
         if (!MapToStockCheckResultDtoMapper.map((Map<String, Object>) stockCheckResponse.getData()).isResult()) {
             return OrderAddResultResponse.builder()
                     .result("fail")
@@ -57,7 +69,7 @@ public class OrderService {
         try {
             orderEntity.setProductName(productForOrderDto.getName());
             orderEntity.setOrderTime(LocalDateTime.now());
-            orderEntity.setSellerEmail(sellerEmail);
+            orderEntity.setSellerEmail(productForOrderDto.getSellerEmail());
 
             this.orderDao.insert(orderEntity);
         } catch (Exception e) {
@@ -70,8 +82,17 @@ public class OrderService {
                 .build();
     }
 
-    @Builder
+    public List<OrderResponseDto> getOrderList(String buyerId) {
+        List<OrderEntity> orderEntities = this.orderDao.findAllByBuyerId(buyerId);
+        return orderEntities.stream().map(OrderEntity::toResponseDto).collect(Collectors.toList());
+    }
 
+    public List<OrderResponseDto> getSellList(String sellerId) {
+        List<OrderEntity> orderEntities = this.orderDao.findAllBySellerId(sellerId);
+        return orderEntities.stream().map(OrderEntity::toResponseDto).collect(Collectors.toList());
+    }
+
+    @Builder
     public OrderService(ProductServiceClient productServiceClient, UserServiceClient userServiceClient, StockServiceClient stockServiceClient, OrderDao orderDao) {
         this.productServiceClient = productServiceClient;
         this.userServiceClient = userServiceClient;

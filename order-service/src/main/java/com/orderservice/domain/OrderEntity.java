@@ -1,5 +1,6 @@
 package com.orderservice.domain;
 
+import com.orderservice.dto.OrderResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.annotation.Id;
@@ -45,7 +46,6 @@ public class OrderEntity {
     }
 
     @Builder
-
     public OrderEntity(String id, String productId, String productName, Long quantity, String sellerId, String sellerEmail, String buyerId, Long moneyPayed, String address, Long pointPayed, LocalDateTime orderTime) {
         this.id = id;
         this.productId = productId;
@@ -58,5 +58,21 @@ public class OrderEntity {
         this.address = address;
         this.pointPayed = pointPayed;
         this.orderTime = orderTime;
+    }
+
+    public OrderResponseDto toResponseDto() {
+        return OrderResponseDto.builder()
+                .id(this.id)
+                .productId(this.productId)
+                .productName(this.productName)
+                .quantity(this.quantity)
+                .sellerId(this.sellerId)
+                .sellerEmail(this.sellerEmail)
+                .buyerId(this.buyerId)
+                .moneyPayed(this.moneyPayed)
+                .address(this.address)
+                .pointPayed(this.pointPayed)
+                .orderTime(this.orderTime)
+                .build();
     }
 }

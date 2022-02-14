@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -70,4 +71,17 @@ public class ProductController {
                 );
     }
 
+    @GetMapping(value = "/getAll")
+    public ResponseEntity<ResponseDto> getAll() {
+        List<ProductSimpleResponseDto> productSimpleResponseDtos = this.productService.getAll();
+
+        return ResponseEntity.ok()
+                .body(ResponseDto.builder()
+                        .status(HttpStatus.OK)
+                        .message("ok")
+                        .dateTime(LocalDateTime.now())
+                        .data(productSimpleResponseDtos)
+                        .build()
+                );
+    }
 }

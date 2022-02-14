@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -26,7 +27,7 @@ public class MongoDBProductDao implements ProductDao {
         ProductEntity productEntity = null;
 
         try {
-            productEntity = mongoTemplate.findOne(findByIdQuery, ProductEntity.class);
+            productEntity = this.mongoTemplate.findOne(findByIdQuery, ProductEntity.class);
         } catch (Exception e) {
             log.error("name: " + e.getClass().getSimpleName() + "\nmsg :" + e.getMessage());
             throw new DataResponseException("유저 데이터를 불러오는 도중 오류.");
@@ -44,7 +45,7 @@ public class MongoDBProductDao implements ProductDao {
         ProductEntity productEntity = null;
 
         try {
-            productEntity = mongoTemplate.findAndRemove(findByIdQuery, ProductEntity.class);
+            productEntity = this.mongoTemplate.findAndRemove(findByIdQuery, ProductEntity.class);
         } catch (Exception e) {
             log.error("name: " + e.getClass().getSimpleName() + "\nmsg :" + e.getMessage());
             throw new DataResponseException("유저 데이터를 불러오는 도중 오류.");
@@ -56,13 +57,28 @@ public class MongoDBProductDao implements ProductDao {
     @Override
     public String insert(ProductEntity productEntity) {
         try {
-            mongoTemplate.insert(productEntity);
+            this.mongoTemplate.insert(productEntity);
         } catch (Exception e) {
             log.error("name: " + e.getClass().getSimpleName() + "\nmsg :" + e.getMessage());
             throw new DatabaseConnectionException("데이터베이스 연결 오류.");
         }
 
         return productEntity.getId();
+    }
+
+    @Override
+    public List<ProductEntity> findAll() {
+        List<ProductEntity> productEntities = null;
+
+        try {
+            productEntities = this.mongoTemplate.findAll(ProductEntity.class);
+        }
+        catch (Exception e) {
+            log.error("name: " + e.getClass().getSimpleName() + "\nmsg :" + e.getMessage());
+            throw new DataResponseException("카테고리 데이터를 불러오는 도중 오류.");
+        }
+
+        return productEntities;
     }
 
     @Override
@@ -87,7 +103,7 @@ public class MongoDBProductDao implements ProductDao {
             update.set("categoryId", productEntity.getCategoryId());
 
         try {
-            mongoTemplate.updateFirst(query, update, ProductEntity.class);
+            this.mongoTemplate.updateFirst(query, update, ProductEntity.class);
         } catch (Exception e) {
             log.error("name: " + e.getClass().getSimpleName() + "\nmsg :" + e.getMessage());
             throw new DatabaseConnectionException("데이터베이스 응답 오류.");
@@ -103,7 +119,7 @@ public class MongoDBProductDao implements ProductDao {
         update.set("sellerEmail", sellerEmail);
 
         try {
-            mongoTemplate.updateMulti(query, update, ProductEntity.class);
+            this.mongoTemplate.updateMulti(query, update, ProductEntity.class);
         } catch (Exception e) {
             log.error("name: " + e.getClass().getSimpleName() + "\nmsg :" + e.getMessage());
             throw new DatabaseConnectionException("데이터베이스 응답 오류.");
@@ -119,7 +135,7 @@ public class MongoDBProductDao implements ProductDao {
         update.set("categoryName", categoryName);
 
         try {
-            mongoTemplate.updateMulti(query, update, ProductEntity.class);
+            this.mongoTemplate.updateMulti(query, update, ProductEntity.class);
         } catch (Exception e) {
             log.error("name: " + e.getClass().getSimpleName() + "\nmsg :" + e.getMessage());
             throw new DatabaseConnectionException("데이터베이스 응답 오류.");
@@ -135,7 +151,7 @@ public class MongoDBProductDao implements ProductDao {
         update.inc("stock", quantity);
 
         try {
-            mongoTemplate.updateMulti(query, update, ProductEntity.class);
+            this.mongoTemplate.updateMulti(query, update, ProductEntity.class);
         } catch (Exception e) {
             log.error("name: " + e.getClass().getSimpleName() + "\nmsg :" + e.getMessage());
             throw new DatabaseConnectionException("데이터베이스 응답 오류.");
@@ -145,7 +161,7 @@ public class MongoDBProductDao implements ProductDao {
     @Override
     public String deleteById(String id) {
         try {
-            mongoTemplate.remove(new Query(Criteria.where("id").is(id)), ProductEntity.class);
+            this.mongoTemplate.remove(new Query(Criteria.where("id").is(id)), ProductEntity.class);
         } catch (Exception e) {
             log.error("name: " + e.getClass().getSimpleName() + "\nmsg :" + e.getMessage());
             throw new DatabaseConnectionException("데이터베이스 연결 오류.");
