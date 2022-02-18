@@ -1,5 +1,6 @@
 package com.userservice.service;
 
+import com.userservice.common.security.JwtTokenProvider;
 import com.userservice.dao.UserDao;
 import com.userservice.domain.UserEntity;
 import com.userservice.dto.*;
@@ -53,7 +54,7 @@ class UserServiceTest {
                 .createdDate(new Date())
                 .build();
         MockitoAnnotations.openMocks(this);
-        this.userService = new UserService(this.kafkaTemplate, this.userDao, this.kafkaTopicName);
+        this.userService = new UserService(this.kafkaTemplate, this.userDao, this.kafkaTopicName, new JwtTokenProvider());
     }
 
     @Test
