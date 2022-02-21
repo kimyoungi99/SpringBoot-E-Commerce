@@ -1,7 +1,7 @@
 package com.orderservice.controller;
 
 import com.orderservice.dto.OrderAddDto;
-import com.orderservice.dto.OrderAddResultResponse;
+import com.orderservice.dto.OrderAddResultResponseDto;
 import com.orderservice.dto.OrderResponseDto;
 import com.orderservice.dto.ResponseDto;
 import com.orderservice.service.OrderService;
@@ -22,7 +22,7 @@ public class OrderController {
 
     @PostMapping(value = "/order")
     public ResponseEntity<ResponseDto> order(@RequestBody OrderAddDto orderAddDto) {
-        OrderAddResultResponse resultResponse = this.orderService.order(orderAddDto);
+        OrderAddResultResponseDto resultResponse = this.orderService.order(orderAddDto);
 
         return ResponseEntity.ok()
                 .body(ResponseDto.builder()

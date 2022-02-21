@@ -28,7 +28,7 @@ public class StockUpdateListener {
         StockUpdateDto stockUpdateDto = MapToStockUpdateDtoMapper.map((Map<String, Object>)  kafkaMessageDto.getData());
         this.productService.updateStock(stockUpdateDto);
 
-        log.info("상품 수량 업데이트 성공 : " + "(id : " + stockUpdateDto.getProductId() + ", name : " + stockUpdateDto.getQuantity());
+        log.info("상품 수량 업데이트 성공 : " + "(id : " + stockUpdateDto.getProductId() + ", stock : " + stockUpdateDto.getQuantity());
 
         ack.acknowledge();
     }

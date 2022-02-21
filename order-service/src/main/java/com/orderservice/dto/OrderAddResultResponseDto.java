@@ -4,13 +4,13 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class OrderAddResultResponse {
+public class OrderAddResultResponseDto {
     private String result;
 
     private String message;
 
     @Builder
-    public OrderAddResultResponse(String result, String message) {
+    public OrderAddResultResponseDto(String result, String message) {
         this.result = result;
         this.message = message;
     }
