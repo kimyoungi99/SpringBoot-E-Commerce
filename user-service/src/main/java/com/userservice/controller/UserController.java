@@ -28,6 +28,35 @@ public class UserController {
                         .build());
     }
 
+    @PostMapping(value = "/login")
+    public ResponseEntity<ResponseDto> login(@RequestBody UserLoginDto userLoginDto) {
+        UserLoginResultDto userLoginResultDto = this.userService.login(userLoginDto);
+
+        return ResponseEntity.ok()
+                .body(ResponseDto.builder()
+                        .status(HttpStatus.OK)
+                        .message("ok")
+                        .dateTime(LocalDateTime.now())
+                        .data(userLoginResultDto)
+                        .build());
+    }
+
+    @PostMapping(value = "/validate")
+    public ResponseEntity<ResponseDto> validate(@RequestBody TokenDto tokenDto) {
+        String userId = this.userService.validate(tokenDto);
+
+        return ResponseEntity.ok()
+                .body(ResponseDto.builder()
+                        .status(HttpStatus.OK)
+                        .message("ok")
+                        .dateTime(LocalDateTime.now())
+                        .data(UserIdDto.builder()
+                                .id(userId)
+                                .build()
+                        )
+                        .build());
+    }
+
     @PostMapping(value = "/delete")
     public ResponseEntity<ResponseDto> delete(@RequestBody UserDeleteDto userDeleteDto) {
         this.userService.delete(userDeleteDto);

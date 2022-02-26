@@ -70,7 +70,7 @@ public class MongoDBUserDao implements UserDao {
             throw new DatabaseConnectionException("데이터베이스 응답 오류.");
         }
 
-        return userEntity.getEmail();
+        return userEntity.getId();
     }
 
     @Override

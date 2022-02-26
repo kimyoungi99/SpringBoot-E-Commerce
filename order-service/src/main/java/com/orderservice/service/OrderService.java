@@ -2,7 +2,6 @@ package com.orderservice.service;
 
 import com.orderservice.client.ProductServiceClient;
 import com.orderservice.client.StockServiceClient;
-import com.orderservice.client.UserServiceClient;
 import com.orderservice.dao.OrderDao;
 import com.orderservice.domain.OrderEntity;
 import com.orderservice.dto.*;
@@ -25,11 +24,10 @@ import java.util.stream.Collectors;
 public class OrderService {
 
     private final ProductServiceClient productServiceClient;
-    private final UserServiceClient userServiceClient;
     private final StockServiceClient stockServiceClient;
     private final OrderDao orderDao;
 
-    public OrderAddResultResponse order(OrderAddDto orderAddDto) {
+    public OrderAddResultResponseDto order(OrderAddDto orderAddDto) {
         OrderEntity orderEntity = OrderAddDtoToOrderEntityMapper.map(orderAddDto);
 
         // init
@@ -44,7 +42,7 @@ public class OrderService {
         }
         ProductForOrderDto productForOrderDto = MapToProductForOrderDtoMapper.map((Map<String, Object>) productResponse.getData());
         if (productForOrderDto.getPrice() != orderAddDto.getMoneyPayed() + orderAddDto.getPointPayed()) {
-            return OrderAddResultResponse.builder()
+            return OrderAddResultResponseDto.builder()
                     .result("fail")
                     .message("상품 금액과 지불한 금액이 일치하지 않습니다.")
                     .build();
@@ -60,7 +58,7 @@ public class OrderService {
             throw new StockServiceConnectionException("수량 서비스 응답 오류.");
         }
         if (!MapToStockCheckResultDtoMapper.map((Map<String, Object>) stockCheckResponse.getData()).isResult()) {
-            return OrderAddResultResponse.builder()
+            return OrderAddResultResponseDto.builder()
                     .result("fail")
                     .message("상품 수량이 부족합니다.")
                     .build();
@@ -76,7 +74,7 @@ public class OrderService {
             this.stockServiceClient.update(orderAddDto.getProductId(), orderAddDto.getQuantity());
         }
 
-        return OrderAddResultResponse.builder()
+        return OrderAddResultResponseDto.builder()
                 .result("success")
                 .message("주문 성공.")
                 .build();
@@ -93,9 +91,8 @@ public class OrderService {
     }
 
     @Builder
-    public OrderService(ProductServiceClient productServiceClient, UserServiceClient userServiceClient, StockServiceClient stockServiceClient, OrderDao orderDao) {
+    public OrderService(ProductServiceClient productServiceClient, StockServiceClient stockServiceClient, OrderDao orderDao) {
         this.productServiceClient = productServiceClient;
-        this.userServiceClient = userServiceClient;
         this.stockServiceClient = stockServiceClient;
         this.orderDao = orderDao;
     }
