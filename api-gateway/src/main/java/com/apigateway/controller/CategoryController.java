@@ -2,7 +2,6 @@ package com.apigateway.controller;
 
 import com.apigateway.dto.CategoryAddDto;
 import com.apigateway.dto.CategoryUpdateDto;
-import com.apigateway.dto.OrderAddDto;
 import com.apigateway.dto.ResponseDto;
 import com.apigateway.service.CategoryService;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +41,6 @@ public class CategoryController {
     public ResponseEntity<ResponseDto> add(
             @RequestBody CategoryAddDto categoryAddDto
     ) {
-
         ResponseDto responseDto = this.categoryService.add(categoryAddDto);
 
         return ResponseEntity
