@@ -13,3 +13,4 @@ Spring Boot와 kafka를 활용한 온라인 커머스 서비스
 ## TODOS
 - stock-service mysql lock 부분 프록시 패턴 적용
 - 카프카 메세지 전달 보장성 DB 업데이트 부분 exactly once로 수정 구현하기
+- 시스템/유저 로그 저장
