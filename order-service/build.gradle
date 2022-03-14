@@ -2,6 +2,21 @@ plugins {
     id 'org.springframework.boot' version '2.6.3'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
+    id 'com.google.cloud.tools.jib' version '3.1.4'
+}
+
+jib {
+    to {
+        image = 'gcr.io/yk-ecommerce/api-gateway'
+    }
+    from {
+        platforms {
+            platform {
+                architecture = "arm64"
+                os = "linux"
+            }
+        }
+    }
 }
 
 ext {
